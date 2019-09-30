@@ -1,7 +1,6 @@
 import json
 import random
 import time
-import webbrowser
 from datetime import datetime
 
 from flask import Flask, Response, render_template
