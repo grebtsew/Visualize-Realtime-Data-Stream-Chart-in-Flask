@@ -5,6 +5,10 @@ from threading import Thread, Event
 from scheduler import *
 from socket_server import SocketServer
 
+"""
+Flask handler manages the start and connection to Flask website/server.
+"""
+
 app = Flask(__name__)
 app.config['DEBUG'] = False # let this be false to only start one webbrowser
 

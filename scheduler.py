@@ -1,13 +1,17 @@
 # include new streams to start in this file
 
-# add import
-from data_streams.random_number import *
-from data_streams.tcp_socket_client import *
+from data_streams.samples import *
 
+from socket_client import SocketClient
 from socket_server import SocketServer
 from data_stream import *
 
 import threading
+
+"""
+Scheduler starts the SocketServer and local data streams when
+ flask server is up and running.
+"""
 
 def scheduler():
     """
@@ -19,7 +23,8 @@ def scheduler():
     SocketServer().start()
 
     # Start Example TCP socket client
-    threading.Thread(target=test_client).start()
+    for message in samplelist: # see samplelist in /data_streams/samples.py
+        SocketClient(message=message).start()
 
     # Start Example Random Number Stream
     DataStream(random_nr_config, random_nr).start()
