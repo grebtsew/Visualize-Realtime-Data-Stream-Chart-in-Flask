@@ -9,6 +9,7 @@
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <script>
+
     function new_card(content) {
         var listview = document.getElementById("listview");
 
@@ -16,7 +17,6 @@
         card.className = "card";
         var card_body = document.createElement("DIV");
         card_body.className = "card-body";
-
 
         card_body.appendChild(content);
         card.appendChild(card_body);
@@ -34,7 +34,7 @@
 
         //receive details from server
         socket.on('server', function(data) {
-                console.log(data)
+              //  console.log(data)
                 var config;
                 var ctx;
                 if(document.getElementById(data.id)){
@@ -51,7 +51,7 @@
                   }
 
 
-                  if (config.data.labels.length === 200) {
+                  if (config.data.labels.length === data.active_points) {
                       config.data.labels.shift();
                       config.data.datasets[0].data.shift();
                   }
@@ -63,16 +63,21 @@
                   // Create graph
 
                   var canvas = document.createElement('CANVAS');
-
                   canvas.id = data.id;
 
+                  // TODO: add switch for type and handle all diagram,sorts.
+
                   var config = {
-                      type: 'line',
+                      type: data.type,
                       id: data.id,
+
+                      width: data.width,
+                      height: data.height,
+
                       data: {
                           labels: [],
                           datasets: [{
-                              label: "Random Dataset",
+                              label: data.legend,
                               backgroundColor: 'rgb(255, 99, 132)',
                               borderColor: 'rgb(255, 99, 132)',
                               data: [],
@@ -83,7 +88,7 @@
                           responsive: true,
                           title: {
                               display: true,
-                              text: 'Creating Real-Time Charts with Flask'
+                              text: data.name
                           },
                           tooltips: {
                               mode: 'index',
@@ -105,7 +110,7 @@
                                   display: true,
                                   scaleLabel: {
                                       display: true,
-                                      labelString: 'Value'
+                                      labelString: data.label
                                   }
                               }]
                           }
@@ -117,12 +122,9 @@
                 //  lineChart.id = data.id+"chart";
 
                 ChartList.push(lineChart);
-                console.log(lineChart);
-                console.log(canvas);
+              //  console.log(lineChart);
+              //  console.log(canvas);
                   new_card(canvas);
-
-              //    var v = $( "#listview" ).append(lineChart);
-                //  console.log(v);
 
                 }
             });
@@ -141,8 +143,8 @@
           <div class="col-12" id="listview">
               <div class="card">
                   <div class="card-body">
-                    <input type="submit" name="Reset_button" value="Clear All" onclick="add_button();">
-
+                    <input type="submit" name="Reset_button" value="Clear All" onclick="clear();">
+                    <input type="submit" name="Paus_button" value="Paus" onclick="paus();">
                 </div>
               </div>
           </div>

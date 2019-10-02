@@ -7,10 +7,6 @@ from flask import Flask, Response, render_template
 import webbrowser
 import time
 
-"""
-Fields Descriptions:
-
-"""
 
 # Application reference
 application = Flask(__name__)
