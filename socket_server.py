@@ -31,7 +31,7 @@ class SocketServer(Thread):
                          _label=safe(data, "label"), _legend=safe(data, "legend"), _width = safe(data, "width"), _height = safe(data, "height"),
                           _name = safe(data, "name"), fill = safe(data, "fill"), backgroundColor = safe(data, "backgroundColor"), borderColor = safe(data, "borderColor"))
                     except Exception as e:
-                        print(" WARNING: an error occured", e)
+                        print(" WARNING: an error occured in socket_server: ", e)
 
 
     def run(self):

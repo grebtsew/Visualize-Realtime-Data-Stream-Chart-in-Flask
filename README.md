@@ -50,6 +50,8 @@ Demo created with gifmaker...
 Examples of how each chart look and what to call the data in json:
 https://www.chartjs.org/samples/latest/
 
+# Examples
+
 # Background
 JSChart is great and useful for charts
 Automate stuff always intresting

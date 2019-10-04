@@ -56,7 +56,32 @@ default:
 }
     }
 
+        function generate_dataset(data){
+        if (typeof data.legend == "string" ){
+          var datasets = [{
+              label: data.legend,
+              backgroundColor: data.backgroundColor,
+              borderColor: data.borderColor,
+              data: [],
+              fill: false, // TODO
+        }];
+      } else {
+        var datasets = []
+        for(i = 0; i < data.legend.length; i++){
+          datasets.push({
+              label: data.legend[i],
+              backgroundColor: data.backgroundColor[i],
+              borderColor: data.borderColor[i],
+              data: [],
+              fill: false, // TODO
+        });
+        }
+      }
+      return datasets;
+      }
+
     function no_axis_config(data){
+      var datasets = generate_dataset(data);
       return  config = {
             type: data.type,
             id: data.id,
@@ -65,14 +90,8 @@ default:
             height: data.height,
 
             data: {
-                labels: [],
-                datasets: [{
-                    label: data.legend,
-                    backgroundColor: data.backgroundColor,
-                    borderColor: data.borderColor,
-                    data: [],
-                    fill: false,
-                }],
+                labels: data.label,
+                datasets: datasets,
             },
             options: {
                 responsive: true,
@@ -94,7 +113,10 @@ default:
 
     }
 
+
+
     function simple_config(data){
+      var datasets = generate_dataset(data);
       return  config = {
             type: data.type,
             id: data.id,
@@ -104,13 +126,7 @@ default:
 
             data: {
                 labels: [],
-                datasets: [{
-                    label: data.legend,
-                    backgroundColor: data.backgroundColor,
-                    borderColor: data.borderColor,
-                    data: [],
-                    fill: false,
-                }],
+                datasets: datasets,
             },
             options: {
                 responsive: true,
@@ -150,56 +166,114 @@ default:
 
     var paus = false;
 
-
     $(document).ready(function(){
         //connect to the socket server.
         var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
         var numbers_received = [];
         var ChartList = [];
 
-        //receive details from server
+        //receive socket from server
         socket.on('server', function(data) {
-              //  console.log(data)
+
                 var config;
                 var ctx;
+
                 if(document.getElementById(data.id)){
 
                 ChartList.forEach(function(chart){
-              //      console.log(chart);
                     if(chart.config.id == data.id){
                       config = chart.config;
                       ctx = chart;
                     }
                   });
+
                   if( config == null || ctx == null || paus){
                     return;
                   }
 
-
+                  // Shift Chart
                   if (config.data.labels.length === data.active_points) {
                       config.data.labels.shift();
-                      config.data.datasets[0].data.shift();
+                      config.data.datasets.forEach(function(datavalue){
+                        datavalue.shift();
+                      });
                   }
+
+                  // Add new Value
                   config.data.labels.push(data.time);
-                  config.data.datasets[0].data.push(data.value);
-                  ctx.update();
+                  var data_set = false;
+
+                  if(typeof data.legend == "string"){
+
+                    if(config.data.datasets.length > 1){
+                    config.data.datasets.forEach(function(datavalue){
+                      if(datavalue.label == data.legend){
+                        data_set = true;
+                      datavalue.data.push(data.value);
+                      }
+                    });
+                  } else {
+                      if(config.data.datasets[0].label == data.legend){
+                        data_set = true;
+                      config.data.datasets[0].data.push(data.value);
+                  }
+                }
+
+              // Create new graph if label doesn't exist.
+              if (!data_set){
+                config.data.datasets.push({
+                    label: data.legend,
+                    backgroundColor: data.backgroundColor,
+                    borderColor: data.borderColor,
+                    data: [data.value],
+                    fill: false,
+              });
+              }
+
+                  } else {
+                    var j = data.legend.length;
+                    for (i = 0; i < j; i++){
+
+                    if(config.data.datasets.length > 1){
+                    config.data.datasets.forEach(function(datavalue){
+                      if(datavalue.label == data.legend[i]){
+                        data_set = true;
+                      datavalue.data.push(data.value[i]);
+                      }
+                    });
+                  } else {
+                      if(config.data.datasets[0].label == data.legend[i]){
+                        data_set = true;
+                      config.data.datasets[0].push(data.value[i]);
+                  }
+                }
+
+              // Create new graph if label doesn't exist.
+              if (!data_set){
+                config.data.datasets.push({
+                    label: data.legend[i],
+                    backgroundColor: data.backgroundColor[i],
+                    borderColor: data.borderColor[i],
+                    data: [data.value[i]],
+                    fill: false,
+              });
+              }
+            }
+          }
+
+            ctx.update();
 
                 } else {
-                  // Create graph
-
+                  // First time new Id appears
+                  // Create new graph
                   var canvas = document.createElement('CANVAS');
                   canvas.id = data.id;
 
                   var config = create_new_config(data);
-
+                  console.log(config);
                   var lineChart = new Chart(canvas, config);
-                //  lineChart.id = data.id+"chart";
-
-                ChartList.push(lineChart);
-              //  console.log(lineChart);
-              //  console.log(canvas);
+                  ChartList.push(lineChart);
                   new_card(canvas);
-
                 }
             });
     });

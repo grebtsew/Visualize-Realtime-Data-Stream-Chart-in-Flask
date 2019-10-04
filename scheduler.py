@@ -22,6 +22,12 @@ def scheduler():
     # Start TCP socket Server
     SocketServer().start()
 
+    # Can be a smart idea to start streams here!
+    # Start some demo flows
+    demo()
+
+def demo():
+
     # Start Example TCP socket client
     for message in samplelist: # see samplelist in /data_streams/samples.py
         SocketClient(message=message).start()

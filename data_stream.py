@@ -4,7 +4,7 @@ from datetime import datetime
 import time
 
 """
-This file contains some data structures for better implementation structure. 
+This file contains some data structures for better implementation structure.
 """
 
 class Config():

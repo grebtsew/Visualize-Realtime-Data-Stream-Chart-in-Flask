@@ -1,5 +1,4 @@
 import socket
-from random import random
 import time
 from threading import Thread
 
