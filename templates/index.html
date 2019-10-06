@@ -51,37 +51,36 @@
     case 'bubble':
       return  simple_config(data);
       break;
+    case 'custom':
+      return custom_config(data);
+      break;
 default:
 
 }
     }
 
+    function custom_config(data){
+      return data.config;
+    }
+
         function generate_dataset(data){
-        if (typeof data.legend == "string" ){
-          var datasets = [{
-              label: data.legend,
-              backgroundColor: data.backgroundColor,
-              borderColor: data.borderColor,
-              data: [],
-              fill: false, // TODO
-        }];
-      } else {
-        var datasets = []
+              var datasets = []
         for(i = 0; i < data.legend.length; i++){
           datasets.push({
               label: data.legend[i],
               backgroundColor: data.backgroundColor[i],
               borderColor: data.borderColor[i],
-              data: [],
+              data: [data.value[i]],
               fill: false, // TODO
         });
         }
-      }
       return datasets;
       }
 
     function no_axis_config(data){
+
       var datasets = generate_dataset(data);
+    //  console.log(datasets);
       return  config = {
             type: data.type,
             id: data.id,
@@ -90,7 +89,7 @@ default:
             height: data.height,
 
             data: {
-                labels: data.label,
+                labels: [data.label],
                 datasets: datasets,
             },
             options: {
@@ -164,6 +163,7 @@ default:
 
     }
 
+
     var paus = false;
 
     $(document).ready(function(){
@@ -178,6 +178,7 @@ default:
                 var config;
                 var ctx;
 
+                // see if chart is already created
                 if(document.getElementById(data.id)){
 
                 ChartList.forEach(function(chart){
@@ -186,16 +187,21 @@ default:
                       ctx = chart;
                     }
                   });
-
                   if( config == null || ctx == null || paus){
                     return;
                   }
+
+                  if(data.type == "custom"){
+                    config = data.config
+                    ctx.update();
+
+                  } else {
 
                   // Shift Chart
                   if (config.data.labels.length === data.active_points) {
                       config.data.labels.shift();
                       config.data.datasets.forEach(function(datavalue){
-                        datavalue.shift();
+                        datavalue.data.shift();
                       });
                   }
 
@@ -203,38 +209,11 @@ default:
                   config.data.labels.push(data.time);
                   var data_set = false;
 
-                  if(typeof data.legend == "string"){
-
-                    if(config.data.datasets.length > 1){
-                    config.data.datasets.forEach(function(datavalue){
-                      if(datavalue.label == data.legend){
-                        data_set = true;
-                      datavalue.data.push(data.value);
-                      }
-                    });
-                  } else {
-                      if(config.data.datasets[0].label == data.legend){
-                        data_set = true;
-                      config.data.datasets[0].data.push(data.value);
-                  }
-                }
-
-              // Create new graph if label doesn't exist.
-              if (!data_set){
-                config.data.datasets.push({
-                    label: data.legend,
-                    backgroundColor: data.backgroundColor,
-                    borderColor: data.borderColor,
-                    data: [data.value],
-                    fill: false,
-              });
-              }
-
-                  } else {
                     var j = data.legend.length;
                     for (i = 0; i < j; i++){
 
                     if(config.data.datasets.length > 1){
+
                     config.data.datasets.forEach(function(datavalue){
                       if(datavalue.label == data.legend[i]){
                         data_set = true;
@@ -242,37 +221,43 @@ default:
                       }
                     });
                   } else {
+
                       if(config.data.datasets[0].label == data.legend[i]){
                         data_set = true;
-                      config.data.datasets[0].push(data.value[i]);
+                      config.data.datasets[0].data.push(data.value[i]);
                   }
                 }
 
               // Create new graph if label doesn't exist.
               if (!data_set){
                 config.data.datasets.push({
-                    label: data.legend[i],
-                    backgroundColor: data.backgroundColor[i],
-                    borderColor: data.borderColor[i],
+                    label: [data.legend[i]],
+                    backgroundColor: [data.backgroundColor[i]],
+                    borderColor: [data.borderColor[i]],
                     data: [data.value[i]],
                     fill: false,
               });
-              }
             }
           }
 
             ctx.update();
-
+            }
                 } else {
                   // First time new Id appears
                   // Create new graph
                   var canvas = document.createElement('CANVAS');
                   canvas.id = data.id;
-
+                  console.log("crash here");
                   var config = create_new_config(data);
+
+                  console.log("crash here2");
                   console.log(config);
+
                   var lineChart = new Chart(canvas, config);
+
                   ChartList.push(lineChart);
+
+                  console.log("Created New Chart");
                   new_card(canvas);
                 }
             });
@@ -281,11 +266,11 @@ default:
 
     function clear_func(){
     // Remove all charts and data
-    console.log("clear");
+  //  console.log("clear");
     ChartList = [];
 
     var listview = document.getElementById('listview');
-    console.log(listview);
+  //  console.log(listview);
 
     var children = listview.children;
     console.log(children);
@@ -296,9 +281,9 @@ default:
       }
     }
 
-    children.forEach(function(child){
-      child.remove();
-    });
+    //children.forEach(function(child){
+  //    child.remove();
+    //});
   }
 
     function paus_func(){

@@ -10,9 +10,9 @@ This file contains some data structures for better implementation structure.
 class Config():
     # Describes the visuals of graphs
     def __init__(self, _id= 0, _type = 'line', _active_points = 20,
-     _delay = 1, _name = "RealtimeGraph", _label="Value", _legend="data",
-      _width = 200, _height = 100, backgroundColor = "rgb(255, 99, 132)",
-       borderColor = "rgb(255, 99, 132)", fill = "false"):
+     _delay = 1, _name = "RealtimeGraph", _label=["Value"], _legend=["data"],
+      _width = 200, _height = 100, backgroundColor = ["rgb(255, 99, 132)"],
+       borderColor = ["rgb(255, 99, 132)"], fill = "false"):
         self.type = _type
         self.active_points = _active_points
         self.delay = _delay = 1;
@@ -61,14 +61,14 @@ def def_param(vari, deff):
 def send_request(id, data, type = 'line', active_points = 20, _label="Value", _legend="data", _width = 200, _height = 100, _name = "Graph", backgroundColor = "rgb(255, 99, 132)", borderColor = "rgb(255, 99, 132)", fill = "false"):
     type = def_param(type, 'line')
     active_points = def_param(active_points, 20)
-    _label = def_param(_label, 'Value')
-    _legend = def_param(_legend, 'data')
+    _label = def_param(_label, ['Value'])
+    _legend = def_param(_legend, ['data'])
     _height = def_param(_height, 200)
     _width = def_param(_width, 100)
     _name = def_param(_name, 'Graph')
     fill = def_param(fill, "False")
-    backgroundColor = def_param(backgroundColor, "rgb(255, 99, 132)")
-    borderColor = def_param(borderColor, "rgb(255, 99, 132)")
+    backgroundColor = def_param(backgroundColor, ["rgb(255, 99, 132)"])
+    borderColor = def_param(borderColor, ["rgb(255, 99, 132)"])
 
 
     flask_handler.socketio.emit('server',
