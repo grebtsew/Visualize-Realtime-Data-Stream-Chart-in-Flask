@@ -111,7 +111,7 @@ Examples of how each chart look and how the data should be represented in json s
 ![Chart.JS](https://www.chartjs.org/) is an opensource project with the main purpose to provide awesome charts for html5 and javascript.
 
 # Licenses
-See ![lisence](LICENSE)
+See ![license](LICENSE)
 
 # Sources
 The main inspiration and solutions comes from the following sources:
