@@ -1,5 +1,5 @@
-# Realtime Stream JSChart in Flask
- Visualize arbitrary realtime data streams in several different charts using Flask in python3.
+# Automatic Visualization of Realtime Data Stream Charts in Flask
+ Visualize arbitrary realtime data streams in with just a few lines of code!
 
 ![demo2](images/demo2.gif)
 
@@ -8,18 +8,17 @@
 
 <!-- toc -->
 
-- [About](#about)
+- [About](#About)
+- [Demo](#Solution)
 - [Getting-Started](#Getting-Started)
 - [How-to-Send-data-to-your-Server](#How-to-Send-data-to-your-Server)
-- [Docker-installation](#Docker-installation)
-- [Demo](#Demo)
-- [Run Old but still working](#run (Old but still working!))
+- [Docker-installation](#Docker)
 - [Demo](#demo)
 - [Examples](#examples)
 - [Background](#Background)
 - [Program-Structure](#Program-Structure)
 - [What-is-flask?](#What-is-flask?)
-- [What-is-JSChart?](#What-is-JSChart?)
+- [What-is-JSChart?](#What-is-Chart.JS?)
 - [License](#license)
 - [Sources](#sources)
 
@@ -27,94 +26,94 @@
 </details>
 
 # About
-Visualizing data flows are important in a project maintaining data streams.
+Visualizing data flows are important in a project where maintaining data streams are of priority.
 The abiliy to visualize data in realtime can have many advantages such as debugging,
-demonstations and thereby early reach a proof of concept phase.
-Showing data in charts using ChartJS, a simple powerful library for Javascript charts.
-The implementation utilizes Flask and is developed mainly in python3 but with some
+demonstations and thereby earlier reach a proof of concept phase.
+In this implementation we are showing data in charts using Chart.JS, a simple powerful library for Javascript charts.
+The implementation utilizes Flask and is developed mainly in python3 and with some
 necessary Javascript functions.
 
 <p align="center" >
   <img width="100" height="100" src="images/python.png">
-  <img width="100" height="100" src="images/jquery.png">
-  <img width="100" height="100" src="images/flask_logo.png">
-  <img width="100" height="100" src="images/chartjs.png">
+  <img width="100" height="100" src="images/jquery.jpg">
+  <img width="200" height="100" src="images/flask_logo.png">
+  <img width="200" height="100" src="images/chartjs.png">
 </p>
+
+## Solution
+This implementation is started by running the start.py file. The Starter will then set a timer for triggering the webbrowser after one second and then start the Flask Handler. The Flask handler will start the Website containing a Flask-SocketIO server. The Flask-Server will recieve json object and update the GUI listview. When the Flask-Server is started the Scheduler will be triggered. The Scheduler will start a TCP Socket Server which has the purpose to recieive messages and proxy them to the flask server. In the Demo we also start some data streams with the scheduler. You basicly have two alternatives on sending data to this implementation. Either create a data stream in the scheduler or create a seperate tcp socket client and send data to the tcp socket server while running. 
+
+See program structure image below:
+![structure](images/structure.png)
 
 
 # Getting Started
-install requirements
-TODO
+1. Install program by firstly installing all the required packages in python3:
+**Note**: If you want to use docker see ![here](#Docker).
 ```
 pip install -r requirements.txt
 ```
-start by running:
+
+2. Start the implementation by running:
 ```
 python3 start.py
 ```
-if website doesn't auto open, open webbrowser and open site:
-```
-https://127.0.0.1:5000/
-```
+
+3. If the website doesn't open automatically, open a webbrowser of your choice and go to: `https://127.0.0.1:5000/`
+
+4. Edit the Scheduler file and Comment the `demo()` line, to make sure the demo data streams won't start.
+
+5. Create your stream by looking at the ![heading below](#How-to-Send-data-to-your-Server).
 
 # How to Send data to your Server
-check out
-```
-socket_client.py
-```
-and
-```
-data_streams/samples.py
-```
+As mentioned in the  ![solution heading above](#Solution) there are two ways of sending data streams to this implementation, creating a socket client or creating data stream in the implementation.
 
-# Docker installation
-TODO: The dockerfile is under development and will be fixed sortly
+## Create a seperate TCP Socket Client
+I created two simple example of tcp socket clients in `examples/`. One that creates a data stream from live stock share prices and one that create a data stream from random numbers.
+
+## Using the scheduler
+Take a closer look at the `scheduler.py` file, where more functions can be added to server start. In the current implementation there are two stream examples using scheduler in the `demo()` function. 
+
+The first one is a seperate tcp socket client started from the scheduler. Check out the scheduler and `socket_client.py`. The second one is a stream using the `DataStream` class. Check out `data_streams/samples.py`.
+
+# Docker
+1. Build the docker image for this project run:
 ```
 docker build . --tag="JSChart-flask:1.0"
 ```
-
-To run image in background run:
+2. Run the image in background run:
 ```
 docker run -d -p 5000:5000 JSChart-flask:1.0
 ```
 
-To run image in interactive mode run:
+2. Or Run image in interactive mode run:
 ```
 docker run -it -p 5000:5000 JSChart-flask:1.0
 ```
 
-Open your webbrowser of choice and open:
+3. Open your webbrowser of choice and go to:
 ```
 http://127.0.0.1:5000/
 ```
 
-
 # Demo
 
-This is the output on the console.
+This is the output on the console during execution.
 ![demo1](images/demo1.PNG)
 
-This is how the implementation looks like during execution.
+This is how the implementation looks like during execution of the `demo()`.
 ![demo2](images/demo2.gif)
 
-Examples of how each chart look and what to call the data in json:
-https://www.chartjs.org/samples/latest/
-https://tobiasahlin.com/blog/chartjs-charts-to-get-you-started
+Examples of how each chart look and how the data should be represented in json see:
+* https://www.chartjs.org/samples/latest/
+* https://tobiasahlin.com/blog/chartjs-charts-to-get-you-started
 
-# Background
-JSChart is great and useful for charts.
-Automate stuff always intresting.
-Generic server for several streams.
-
-## Program Structure
-See program structure image below:
-![structure](images/structure.png)
 
 ## What is flask?
-Flask is a micro web framework, enabling websites to be hosted in python.
+![Flask](https://en.wikipedia.org/wiki/Flask_(web_framework)) is a micro web framework, enabling websites to be hosted in python.
 
-## What is JSChart?
-JSChart is an opensource project with the main purpose to provide awesome charts for html5 and javascript.
+## What is Chart.JS?
+![Chart.JS](https://www.chartjs.org/) is an opensource project with the main purpose to provide awesome charts for html5 and javascript.
 
 # Licenses
 See ![lisence](LICENSE)
