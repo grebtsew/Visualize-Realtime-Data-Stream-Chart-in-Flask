@@ -19,7 +19,7 @@ thread = Thread() # scheduler thread
 thread_stop_event = Event()
 
 def start_flask_application():
-    socketio.run(app)
+    socketio.run(app, host='0.0.0.0')
 
 @app.route('/')
 def index():

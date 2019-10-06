@@ -73,9 +73,22 @@ TODO: The dockerfile is under development and will be fixed sortly
 docker build . --tag="JSChart-flask:1.0"
 ```
 
+To run image in background run:
 ```
-docker run JSChart-flask:1.0
+docker run -d -p 5000:5000 JSChart-flask:1.0
 ```
+
+To run image in interactive mode run:
+```
+docker run -it -p 5000:5000 JSChart-flask:1.0
+```
+
+Open your webbrowser of choice and open:
+```
+http://127.0.0.1:5000/
+```
+
+
 # Demo
 
 This is the output on the console.
@@ -87,7 +100,6 @@ This is how the implementation looks like during execution.
 Examples of how each chart look and what to call the data in json:
 https://www.chartjs.org/samples/latest/
 https://tobiasahlin.com/blog/chartjs-charts-to-get-you-started
-
 
 # Background
 JSChart is great and useful for charts.
