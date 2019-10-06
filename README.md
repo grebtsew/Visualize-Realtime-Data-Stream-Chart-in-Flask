@@ -1,5 +1,5 @@
 # Automatic Visualization of Realtime Data Stream Charts in Flask
- Visualize arbitrary realtime data streams in with just a few lines of code!
+ Visualize arbitrary realtime data streams with just a few lines of code!
 
 ![demo2](images/demo2.gif)
 
@@ -9,14 +9,12 @@
 <!-- toc -->
 
 - [About](#About)
-- [Demo](#Solution)
+- [Solution](#Solution)
 - [Getting-Started](#Getting-Started)
 - [How-to-Send-data-to-your-Server](#How-to-Send-data-to-your-Server)
-- [Docker-installation](#Docker)
+- [Docker](#Docker)
 - [Demo](#demo)
 - [Examples](#examples)
-- [Background](#Background)
-- [Program-Structure](#Program-Structure)
 - [What-is-flask?](#What-is-flask?)
 - [What-is-JSChart?](#What-is-Chart.JS?)
 - [License](#license)
@@ -27,21 +25,18 @@
 
 # About
 Visualizing data flows are important in a project where maintaining data streams are of priority.
-The abiliy to visualize data in realtime can have many advantages such as debugging,
-demonstations and thereby earlier reach a proof of concept phase.
-In this implementation we are showing data in charts using Chart.JS, a simple powerful library for Javascript charts.
-The implementation utilizes Flask and is developed mainly in python3 and with some
-necessary Javascript functions.
+The abiliy to visualize data in realtime can have advantages in may development areas such as debugging and
+demonstations. In this implementation we are visualizing data in charts using Chart.JS, a simple powerful library for creating charts in Javascript. This implementation utilizes Flask and is developed mainly in python3.
 
 <p align="center" >
   <img width="100" height="100" src="images/python.png">
-  <img width="100" height="100" src="images/jquery.jpg">
+  <img width="200" height="100" src="images/jquery.jpg">
   <img width="200" height="100" src="images/flask_logo.png">
-  <img width="200" height="100" src="images/chartjs.png">
+  <img width="300" height="100" src="images/chartjs.png">
 </p>
 
 ## Solution
-This implementation is started by running the start.py file. The Starter will then set a timer for triggering the webbrowser after one second and then start the Flask Handler. The Flask handler will start the Website containing a Flask-SocketIO server. The Flask-Server will recieve json object and update the GUI listview. When the Flask-Server is started the Scheduler will be triggered. The Scheduler will start a TCP Socket Server which has the purpose to recieive messages and proxy them to the flask server. In the Demo we also start some data streams with the scheduler. You basicly have two alternatives on sending data to this implementation. Either create a data stream in the scheduler or create a seperate tcp socket client and send data to the tcp socket server while running. 
+This implementation is started by running the `start.py` file. The `Starter` will then set a timer for triggering the webbrowser after one second and then start the `Flask Handler`. The `Flask Handler` will start the website containing a `Flask-SocketIO` server. The `Flask-Server` will recieve json objects and update the `GUI` listview. When the `Flask-Server` is started the `Scheduler` will be triggered. The `Scheduler` will start a `TCP Socket Server` which has the purpose of receing messages and proxy them to the flask server. In the `demo` we also start some data streams with the scheduler. You basicly have two alternatives on sending data to this implementation. Either create a data stream in the `scheduler` or create a seperate `tcp socket client` and send data to the tcp socket server while running. 
 
 See program structure image below:
 ![structure](images/structure.png)
@@ -61,12 +56,12 @@ python3 start.py
 
 3. If the website doesn't open automatically, open a webbrowser of your choice and go to: `https://127.0.0.1:5000/`
 
-4. Edit the Scheduler file and Comment the `demo()` line, to make sure the demo data streams won't start.
+4. Edit the `Scheduler` file and Comment the `demo()` line, to make sure the demo data streams won't start.
 
 5. Create your stream by looking at the ![heading below](#How-to-Send-data-to-your-Server).
 
 # How to Send data to your Server
-As mentioned in the  ![solution heading above](#Solution) there are two ways of sending data streams to this implementation, creating a socket client or creating data stream in the implementation.
+As mentioned in the ![solution heading above](#Solution) there are two ways of sending data streams to this implementation, creating a socket client or creating data stream in the implementation.
 
 ## Create a seperate TCP Socket Client
 I created two simple example of tcp socket clients in `examples/`. One that creates a data stream from live stock share prices and one that create a data stream from random numbers.
@@ -77,16 +72,16 @@ Take a closer look at the `scheduler.py` file, where more functions can be added
 The first one is a seperate tcp socket client started from the scheduler. Check out the scheduler and `socket_client.py`. The second one is a stream using the `DataStream` class. Check out `data_streams/samples.py`.
 
 # Docker
-1. Build the docker image for this project run:
+1. Build the docker image for this project by running:
 ```
 docker build . --tag="JSChart-flask:1.0"
 ```
-2. Run the image in background run:
+2. Run the image in background by running:
 ```
 docker run -d -p 5000:5000 JSChart-flask:1.0
 ```
 
-2. Or Run image in interactive mode run:
+2. Or Run image in interactive mode by running:
 ```
 docker run -it -p 5000:5000 JSChart-flask:1.0
 ```
@@ -120,5 +115,5 @@ See ![lisence](LICENSE)
 
 # Sources
 The main inspiration and solutions comes from the following sources:
-* https://gitlab.com/patkennedy79/flask_chartjs_example/tree/master/templates
+* https://gitlab.com/patkennedy79/flask_chartjs_example
 * https://github.com/roniemartinez/real-time-charts-with-flask
