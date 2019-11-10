@@ -4,9 +4,11 @@ import base64
 import random
 
 
+"""
+This Function is under development and is not currently working!
+"""
 
-cap = cv2.VideoCapture(0)
-
+print("THIS PROGRAM IS NOT CURRENTLY WORKING!!!!")
 conn = VisClient("127.0.0.1",12345)
 print("Sending heatmap data")
 while True:
