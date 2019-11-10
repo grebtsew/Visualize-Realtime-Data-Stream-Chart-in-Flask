@@ -20,7 +20,7 @@ def main():
 
     while True:
 
-        send_str = '{"id":80085, "value": '+str(round(random()*100, 3))+', "type":"line","active_points": 20, "label":"Random Number", "legend": "random", "name":"Random Number Example",  "borderColor":"#3e95cd", "backgroundColor" :"#3e95cd"}'
+        send_str = '{"id":80085, "value":['+str(round(random()*100, 3))+'], "type":"line","active_points": 20, "label":["Random Number"], "legend": ["random"], "name":"Random Number Example",  "borderColor":["#3e95cd"], "backgroundColor" :["#3e95cd"]}'
         sock.sendall(str.encode(send_str))
 
         time.sleep(0.5)

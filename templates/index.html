@@ -6,8 +6,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
 
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+
+    <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <script>
 
     function new_card(content) {
@@ -76,6 +81,7 @@ default:
         }
       return datasets;
       }
+
 
     function no_axis_config(data){
 
@@ -178,6 +184,42 @@ default:
                 var config;
                 var ctx;
 
+
+                if(data.type == "heatmap"){
+                  if(document.getElementById(data.id)){
+                  } else {
+                    var canvas = document.createElement('CANVAS');
+                    canvas.id = data.id;
+
+                    new_card(canvas);
+
+                  }
+                }
+
+                if(data.type == "image"){
+                    if(document.getElementById(data.id)){
+                      var image = document.getElementById(data.id);
+                      image.src = data.value;
+
+                    } else {
+                  var container = document.createElement("DIV");
+                  var title = document.createElement("H1");
+                  title.style.textAlign = "center";
+                  var node = document.createTextNode(data.name);
+                  title.appendChild(node);
+                  container.appendChild(title);
+
+                  var image = document.createElement("IMG");
+                  image.className = "image";
+                  image.id = data.id;
+                  image.style.height = '100%';
+                  image.style.width = '100%';
+                  image.src = data.value;
+                  container.appendChild(image);
+                  new_card(container);
+                  }
+                }
+
                 // see if chart is already created
                 if(document.getElementById(data.id)){
 
@@ -247,17 +289,14 @@ default:
                   // Create new graph
                   var canvas = document.createElement('CANVAS');
                   canvas.id = data.id;
-                  console.log("crash here");
                   var config = create_new_config(data);
 
-                  console.log("crash here2");
-                  console.log(config);
+                  //console.log(config);
 
                   var lineChart = new Chart(canvas, config);
 
                   ChartList.push(lineChart);
 
-                  console.log("Created New Chart");
                   new_card(canvas);
                 }
             });
@@ -273,7 +312,6 @@ default:
   //  console.log(listview);
 
     var children = listview.children;
-    console.log(children);
 
     for (let child of children) {
       if(child.id != "buttons"){
