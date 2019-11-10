@@ -180,17 +180,6 @@ default:
                 var ctx;
 
 
-                if(data.type == "heatmap"){
-                  if(document.getElementById(data.id)){
-                  } else {
-                    var canvas = document.createElement('CANVAS');
-                    canvas.id = data.id;
-
-                    new_card(canvas);
-
-                  }
-                }
-
                 if(data.type == "image"){
                     if(document.getElementById(data.id)){
                       var image = document.getElementById(data.id);

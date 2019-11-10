@@ -32,7 +32,7 @@ class VisClient(threading.Thread):
         """
         Send data to vis
         """
-        self.socket_server.sendall(str.encode(data))
+        self.s.sendall(str.encode(data))
 
     def run(self):
         self.send()

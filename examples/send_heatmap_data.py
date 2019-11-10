@@ -7,22 +7,50 @@ import random
 """
 This Function is under development and is not currently working!
 """
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
-print("THIS PROGRAM IS NOT CURRENTLY WORKING!!!!")
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+import cv2
+
+pixels = np.zeros((1080, 1920))
+
+data_heat_value = 1
+
+
 conn = VisClient("127.0.0.1",12345)
-print("Sending heatmap data")
+print("Creating and sending heatmap to server!!!")
 while True:
-    size = (1920,1080)
+    # Add 100 points
+    for i in range(0,100):
+    # Add random point in heatmap
+        pixels[random.randint(0,1080-1)][random.randint(0,1920-1)] += data_heat_value
+    fig, ax = plt.subplots()
 
-    new_point =  (random.randint(0,size[0]), random.randint(0,size[1]))
+    im = ax.imshow(pixels)
 
-    send_str = '{"id":80085, "value":['+str(round(random()*100, 3))+'], "type":"line","active_points": 20, "label":["Random Number"], "legend": ["random"], "name":"Random Number Example",  "borderColor":["#3e95cd"], "backgroundColor" :["#3e95cd"]}'
 
-    send_string = '{"id":69696969, "value":"'+encoded_string+'", "type":"image","name":"Webcam Stream"}'
+    ax.set_title("Heatmap Example")
+    fig.tight_layout()
 
-    conn.send(send_string)
+    fig.canvas.draw()
 
-    time.sleep(1)
+    #plt.show()
+
+    image = np.array(fig.canvas.renderer._renderer)
 
     #cv2.imshow("test", image)
     #cv2.waitKey(1)
+
+    retval, buffer = cv2.imencode('.png', image)
+    encoded_string = "data:image/png;base64,"+base64.b64encode(buffer).decode()
+
+    send_string = '{"id":69696969, "value":"'+encoded_string+'", "type":"image","name":""}'
+
+    plt.close(fig)
+
+    conn.send_large(send_string)
+
+    time.sleep(1)
