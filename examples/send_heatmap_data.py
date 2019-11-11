@@ -47,10 +47,10 @@ while True:
     retval, buffer = cv2.imencode('.png', image)
     encoded_string = "data:image/png;base64,"+base64.b64encode(buffer).decode()
 
-    send_string = '{"id":69696969, "value":"'+encoded_string+'", "type":"image","name":""}'
+    send_string = '{"id":696969969, "value":"'+encoded_string+'", "type":"image","name":""}'
 
     plt.close(fig)
 
     conn.send_large(send_string)
 
-    time.sleep(1)
+    time.sleep(2)

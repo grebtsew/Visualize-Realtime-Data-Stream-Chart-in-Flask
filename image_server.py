@@ -41,7 +41,6 @@ class ImageServer(Thread):
                     data = data[msg_size:]
 
                     data=pickle.loads(frame_data, fix_imports=True, encoding="bytes")
-
                     data = json.loads(data)
                     send_request(id = data["id"], data=data["value"], type =safe(data, "type"), active_points =safe(data, "active_points"),
                      _label=safe(data, "label"), _legend=safe(data, "legend"), _width = safe(data, "width"), _height = safe(data, "height"),

@@ -2,7 +2,7 @@ from threading import Thread
 import flask_handler
 from datetime import datetime
 import time
-
+import threading
 """
 This file contains some data structures for better implementation structure.
 """
@@ -69,7 +69,6 @@ def send_request(id, data, type = 'line', active_points = 20, _label="Value", _l
     fill = def_param(fill, "False")
     backgroundColor = def_param(backgroundColor, ["rgb(255, 99, 132)"])
     borderColor = def_param(borderColor, ["rgb(255, 99, 132)"])
-
 
     flask_handler.socketio.emit('server',
     {'id': id,
