@@ -1,56 +1,29 @@
-from VisClient import VisClient
+import socket
 import time
-import base64
-import random
-
+from random import random
 
 """
-This Function is under development and is not currently working!
+Stock price stream example for this program
 """
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
 
-import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
-import cv2
+def main():
+    HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
+    PORT = 65432 # can change this if you want
 
-pixels = np.zeros((1080, 1920))
+    # Create a TCP/IP socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-data_heat_value = 1
+    # Bind the socket to the port
+    server_address = (HOST, PORT)
 
+    sock.connect(server_address)
+    print("start Sending data")
+    while True:
+        point = (int(round(random()*192, 3)),int(round(random()*108, 3)))
+        send_str = '{"id":80085, "value":['+str(point[0])+","+str(point[1])+'], "type":"heatmap","active_points": 20, "width":192, "height":108, "label":["Random Number"], "legend": ["random"], "name":"Random Pos Heatmap",  "borderColor":["#3e95cd"], "backgroundColor" :["#3e95cd"]}'
+        sock.sendall(str.encode(send_str))
 
-conn = VisClient("127.0.0.1",12345)
-print("Creating and sending heatmap to server!!!")
-while True:
-    # Add 100 points
-    for i in range(0,100):
-    # Add random point in heatmap
-        pixels[random.randint(0,1080-1)][random.randint(0,1920-1)] += data_heat_value
-    fig, ax = plt.subplots()
+        time.sleep(1)
 
-    im = ax.imshow(pixels)
-
-
-    ax.set_title("Heatmap Example")
-    fig.tight_layout()
-
-    fig.canvas.draw()
-
-    #plt.show()
-
-    image = np.array(fig.canvas.renderer._renderer)
-
-    #cv2.imshow("test", image)
-    #cv2.waitKey(1)
-
-    retval, buffer = cv2.imencode('.png', image)
-    encoded_string = "data:image/png;base64,"+base64.b64encode(buffer).decode()
-
-    send_string = '{"id":696969969, "value":"'+encoded_string+'", "type":"image","name":""}'
-
-    plt.close(fig)
-
-    conn.send_large(send_string)
-
-    time.sleep(2)
+if __name__ == '__main__':
+    main()

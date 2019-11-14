@@ -17,7 +17,7 @@
         card.className = "card";
         var card_body = document.createElement("DIV");
         card_body.className = "card-body";
-
+        card_body.style.overflow = "auto";
         card_body.appendChild(content);
         card.appendChild(card_body);
 
@@ -169,7 +169,6 @@ default:
 
     $(document).ready(function(){
 
-      var heatmaparray = Array(1920).fill(Array(1080).fill(0));
 
         //connect to the socket server.
         var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
@@ -181,23 +180,43 @@ default:
 
                 var config;
                 var ctx;
+                //console.log(data)
+                const zeros = (m, n) => [...Array(m)].map(e => Array(n).fill(0));
 
                 if(data.type == "heatmap"){
                   if(document.getElementById(data.id)){
                     // set heatmap
+                    var parent = document.getElementById(data.id);
+                    var div = parent.firstChild;
+                    var arr = div.data[0].z
+                    var d = data.value
+                    arr[d[0]][d[1]] += 1;
+                    //Plotly.update(div, arr)
+                    Plotly.redraw(div,arr);
+
                   }
                   else {
-                        var data = [
+                    var heatmaparray = new Array(data.width).fill(0).map(() => new Array(data.height).fill(0));
+                    var d = data.value;
+                    heatmaparray[d[0]][d[1]] += 1;
+                        var heatmap = [
                           {
                             z: heatmaparray,
                             type: 'heatmap'
                           }
                   ];
+                  var layout = {
+                  title: data.name,
+                  autosize: true
+                };
                   // create new card
+                  var div_con = document.createElement("DIV");
                   var div = document.createElement("DIV");
-                  div.id = data.id
-                  new_card(div);
-                  Plotly.newPlot(data.id, data);
+                  div_con.id = data.id;
+                  div.style.width = "100%";
+                  Plotly.newPlot(div, heatmap, layout);
+                  div_con.appendChild(div);
+                  new_card(div_con);
                   }
                 }
 
@@ -307,6 +326,16 @@ default:
             });
     });
 
+    function zeros(dimensions) {
+        var array = [];
+
+        for (var i = 0; i < dimensions[0]; ++i) {
+            array.push(dimensions.length == 1 ? 0 : zeros(dimensions.slice(1)));
+        }
+
+        return array;
+    }
+
 
     function clear_func(){
     // Remove all charts and data
@@ -327,6 +356,14 @@ default:
     //children.forEach(function(child){
   //    child.remove();
     //});
+  }
+
+  function Create2DArray(rows,columns) {
+     var x = new Array(rows);
+     for (var i = 0; i < rows; i++) {
+         x[i] = new Array(columns).fill(0);
+     }
+     return x;
   }
 
     function paus_func(){
