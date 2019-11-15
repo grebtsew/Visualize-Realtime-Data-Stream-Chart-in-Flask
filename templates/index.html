@@ -198,6 +198,8 @@ default:
                   else {
                     var heatmaparray = new Array(data.width).fill(0).map(() => new Array(data.height).fill(0));
                     var d = data.value;
+                    console.log(d)
+                    console.log(heatmaparray)
                     heatmaparray[d[0]][d[1]] += 1;
                         var heatmap = [
                           {
