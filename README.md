@@ -26,17 +26,18 @@
 # About
 Visualizing data flows are important in a project where maintaining data streams are of priority.
 The abiliy to visualize data in realtime can have advantages in may development areas such as debugging and
-demonstations. In this implementation we are visualizing data in charts using Chart.JS, a simple powerful library for creating charts in Javascript. This implementation utilizes Flask and is developed mainly in python3.
+demonstations. In this implementation we are visualizing data in charts using Chart.JS, a simple powerful library for creating charts in Javascript. The server can now also visualize image streams and heatmaps using Plotly, a modern analytics app for enterprises. This implementation utilizes Flask and is developed mainly in python3 and Javascript.
 
 <p align="center" >
   <img width="100" height="100" src="images/python.png">
   <img width="200" height="100" src="images/jquery.jpg">
   <img width="200" height="100" src="images/flask_logo.png">
   <img width="300" height="100" src="images/chartjs.png">
+  <img width="200" height="100" src="images/plotly.png">
 </p>
 
 ## Solution
-This implementation is started by running the `start.py` file. The `Starter` will then set a timer for triggering the webbrowser after one second and then start the `Flask Handler`. The `Flask Handler` will start the website containing a `Flask-SocketIO` server. The `Flask-Server` will recieve json objects and update the `GUI` listview. When the `Flask-Server` is started the `Scheduler` will be triggered. The `Scheduler` will start a `TCP Socket Server` which has the purpose of receing messages and proxy them to the flask server. In the `demo` we also start some data streams with the scheduler. You basicly have two alternatives on sending data to this implementation. Either create a data stream in the `scheduler` or create a seperate `tcp socket client` and send data to the tcp socket server while running. 
+This implementation is started by running the `start.py` file. The `Starter` will then set a timer for triggering the webbrowser after one second and then start the `Flask Handler`. The `Flask Handler` will start the website containing a `Flask-SocketIO` server. The `Flask-Server` will receive json objects and update the `GUI` listview. When the `Flask-Server` is started the `Scheduler` will be triggered. The `Scheduler` will start a `TCP Socket Server` which has the purpose of receiving messages and proxy them to the flask server. In the `demo` we also start some data streams with the scheduler. You basicly have two alternatives on sending data to this implementation. Either create a data stream in the `scheduler` or create a seperate `tcp socket client` and send data to the tcp socket server while running.
 
 See program structure image below:
 ![structure](images/structure.png)
@@ -67,7 +68,7 @@ As mentioned in the ![solution heading above](#Solution) there are two ways of s
 I created two simple example of tcp socket clients in `examples/`. One that creates a data stream from live stock share prices and one that create a data stream from random numbers.
 
 ## Using the scheduler
-Take a closer look at the `scheduler.py` file, where more functions can be added to server start. In the current implementation there are two stream examples using scheduler in the `demo()` function. 
+Take a closer look at the `scheduler.py` file, where more functions can be added to server start. In the current implementation there are two stream examples using scheduler in the `demo()` function.
 
 The first one is a seperate tcp socket client started from the scheduler. Check out the scheduler and `socket_client.py`. The second one is a stream using the `DataStream` class. Check out `data_streams/samples.py`.
 
@@ -103,12 +104,14 @@ Examples of how each chart look and how the data should be represented in json s
 * https://www.chartjs.org/samples/latest/
 * https://tobiasahlin.com/blog/chartjs-charts-to-get-you-started
 
-
 ## What is flask?
 ![Flask](https://en.wikipedia.org/wiki/Flask_(web_framework)) is a micro web framework, enabling websites to be hosted in python.
 
 ## What is Chart.JS?
 ![Chart.JS](https://www.chartjs.org/) is an opensource project with the main purpose to provide awesome charts for html5 and javascript.
+
+## What is Plotly?
+![Plotly](https://plot.ly/) is a collection of open source Graphing Libraries for visualizing data in a vast amount of formats.
 
 # Licenses
 See ![license](LICENSE)
