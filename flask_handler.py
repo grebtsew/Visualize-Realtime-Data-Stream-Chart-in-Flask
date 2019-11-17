@@ -9,7 +9,7 @@ from socket_server import SocketServer
 Flask handler manages the start and connection to Flask website/server.
 """
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.config['DEBUG'] = False # let this be false to only start one webbrowser
 
 #turn the flask app into a socketio app
@@ -35,7 +35,6 @@ def test_connect():
     #Start the generator threads only if the thread has not been started before.
     if not thread.isAlive():
         scheduler()
-
 
 @socketio.on('disconnect', namespace='/test')
 def test_disconnect():

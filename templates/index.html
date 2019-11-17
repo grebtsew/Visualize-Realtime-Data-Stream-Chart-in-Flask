@@ -5,6 +5,7 @@
     <title>Creating Real-Time Charts with Flask</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
@@ -166,9 +167,23 @@ default:
 
 
     var paus = false;
+    var demo_scroll = false;
 
     $(document).ready(function(){
 
+      // scroll listener
+      window.addEventListener('scroll', function(e) {
+        scroll_func();
+      });
+
+      document.addEventListener('keyup', (e) => {
+      //  console.log("test");
+      //  console.log(e.code);
+        if (e.code === "KeyD") {
+          demo_func();
+
+        }
+      });
 
         //connect to the socket server.
         var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
@@ -198,8 +213,6 @@ default:
                   else {
                     var heatmaparray = new Array(data.width).fill(0).map(() => new Array(data.height).fill(0));
                     var d = data.value;
-                    console.log(d)
-                    console.log(heatmaparray)
                     heatmaparray[d[0]][d[1]] += 1;
                         var heatmap = [
                           {
@@ -326,6 +339,9 @@ default:
                   new_card(canvas);
                 }
             });
+
+
+
     });
 
     function zeros(dimensions) {
@@ -355,9 +371,6 @@ default:
       }
     }
 
-    //children.forEach(function(child){
-  //    child.remove();
-    //});
   }
 
   function Create2DArray(rows,columns) {
@@ -377,10 +390,43 @@ default:
       }
     }
 
-    </script>
+    function demo_func(){
+      // Toggle paus variable
+      console.log("demo_change")
+      if (demo_scroll){
+        demo_scroll = false;
+        $('html, body').stop();
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
+      } else {
+        demo_scroll = true;
+        scrollTo(0,1);
+        scrollTo(0,0);
+      }
+    }
+    function sleep(delay) {
+        var start = new Date().getTime();
+        while (new Date().getTime() < start + delay);
+    }
+
+    function scroll_func(){
+      if(demo_scroll){
+        var slider = document.getElementById("myRange");
+        console.log(parseInt(slider.value))
+
+      if (Math.round($(window).scrollTop() + $(window).height()) == $(document).height()){
+         $('html, body').animate({scrollTop:0}, {duration: parseInt(slider.value)});
+       }
+
+    if(Math.round($(window).scrollTop())  == 0){
+         $('html, body').animate({scrollTop:$(document).height()-$(window).height()}, {duration: parseInt(slider.value)});
+      }
+    }
+  }
+
+
+
+    </script>
+    </head>
 <body>
   <body>
   <div class="container">
@@ -390,12 +436,13 @@ default:
                   <div class="card-body">
                     <input type="submit" name="Reset_button" value="Clear All" onclick="clear_func();">
                     <input type="submit" name="Paus_button" value="Paus Toggle" onclick="paus_func();">
+                    <input type="submit" name="Demo_button" value="Demo Mode" onclick="demo_func();">
+                    <input type="range" min="1" max="100000" value="60000" class="slider" id="myRange">
                 </div>
               </div>
           </div>
       </div>
   </div>
-  <div id="myDiv"></div>
   <!--suppress JSUnresolvedLibraryURL -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
   <!--suppress JSUnresolvedLibraryURL -->
@@ -405,5 +452,6 @@ default:
   <script>
 
       </script>
+
   </body>
   </html>
