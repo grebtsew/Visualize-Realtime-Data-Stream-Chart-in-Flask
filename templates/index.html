@@ -236,7 +236,6 @@ default:
                 }
 
                 if(data.type == "image"){
-
                     if(document.getElementById(data.id)){
                       var image = document.getElementById(data.id);
                       image.src = data.value;
@@ -411,7 +410,6 @@ default:
     function scroll_func(){
       if(demo_scroll){
         var slider = document.getElementById("myRange");
-        console.log(parseInt(slider.value))
 
       if (Math.round($(window).scrollTop() + $(window).height()) == $(document).height()){
          $('html, body').animate({scrollTop:0}, {duration: parseInt(slider.value)});
