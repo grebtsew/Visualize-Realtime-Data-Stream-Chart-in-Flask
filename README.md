@@ -32,10 +32,11 @@ demonstations. In this implementation we are visualizing data in charts using Ch
   <img width="100" height="100" src="images/python.png">
   <img width="200" height="100" src="images/jquery.jpg">
   <img width="200" height="100" src="images/flask_logo.png">
+</p>
+<p align="center" >
   <img width="300" height="100" src="images/chartjs.png">
   <img width="200" height="100" src="images/plotly.png">
 </p>
-
 ## Solution
 This implementation is started by running the `start.py` file. The `Starter` will then set a timer for triggering the webbrowser after one second and then start the `Flask Handler`. The `Flask Handler` will start the website containing a `Flask-SocketIO` server. The `Flask-Server` will receive json objects and update the `GUI` listview. When the `Flask-Server` is started the `Scheduler` will be triggered. The `Scheduler` will start a `TCP Socket Server` which has the purpose of receiving messages and proxy them to the flask server. In the `demo` we also start some data streams with the scheduler. You basicly have two alternatives on sending data to this implementation. Either create a data stream in the `scheduler` or create a seperate `tcp socket client` and send data to the tcp socket server while running.
 
