@@ -258,6 +258,32 @@ default:
                   }
                 }
 
+                if(data.type == "text"){
+                    if(document.getElementById(data.id)){
+                      document.getElementById(data.id).innerHTML += "> "+ data.value + "<br />";
+                      $('#'+data.id).animate({scrollTop: $('#'+data.id).prop("scrollHeight")}, 500);
+                    } else {
+                  var container = document.createElement("DIV");
+                  var title = document.createElement("H1");
+                  title.style.textAlign = "center";
+                  var node = document.createTextNode(data.name);
+                  title.appendChild(node);
+                  container.appendChild(title);
+
+                  var text = document.createElement("DIV");
+                  text.className = "text";
+                  text.id = data.id;
+                  text.style.background = data.backgroundColor;
+                  text.style.color = data.borderColor;
+                  text.style.height = '500px';
+                  text.style.overflow = 'scroll';
+                  text.style.width = '100%';
+                  text.innerHTML = "> "+ data.value + "<br />";
+                  container.appendChild(text);
+                  new_card(container);
+                  }
+                }
+
                 // see if chart is already created
                 if(document.getElementById(data.id)){
 

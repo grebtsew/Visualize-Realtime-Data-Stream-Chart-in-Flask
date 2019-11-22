@@ -26,7 +26,7 @@ def scheduler():
 
     # Can be a smart idea to start streams here!
     # Start some demo flows
-    demo()
+    #demo()
 
 def demo():
 
@@ -36,5 +36,3 @@ def demo():
 
     # Start Example Random Number Stream
     DataStream(random_nr_config, random_nr).start()
-
-    
