@@ -32,6 +32,8 @@ demonstations. In this implementation we are visualizing data in charts using Ch
   <img width="100" height="100" src="images/python.png">
   <img width="200" height="100" src="images/jquery.jpg">
   <img width="200" height="100" src="images/flask_logo.png">
+</p>
+<p align="center" >
   <img width="300" height="100" src="images/chartjs.png">
   <img width="200" height="100" src="images/plotly.png">
 </p>
