@@ -26,7 +26,7 @@ def scheduler():
 
     # Can be a smart idea to start streams here!
     # Start some demo flows
-    #demo()
+    demo()
 
 def demo():
 
