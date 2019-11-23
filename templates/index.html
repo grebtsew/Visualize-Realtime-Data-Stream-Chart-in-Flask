@@ -176,6 +176,10 @@ default:
         scroll_func();
       });
 
+      window.addEventListener('resize', function(event){
+        resized();
+      });
+
       document.addEventListener('keyup', (e) => {
       //  console.log("test");
       //  console.log(e.code);
@@ -434,8 +438,25 @@ default:
         while (new Date().getTime() < start + delay);
     }
 
+function scroll_func(){
+      if(demo_scroll){
+        var slider = document.getElementById("myRange");
 
+    if (Math.round($(window).scrollTop() + $(window).height()) == $(document).height()-1){
+         $('html, body').animate({scrollTop:0}, {duration: parseInt(slider.value)});
+    }
 
+    if(Math.round($(window).scrollTop())  == 0){
+         $('html, body').animate({scrollTop:Math.round($(document).height()-$(window).height())}, {duration: parseInt(slider.value)});
+      }
+    }
+  }
+          function resized(){
+            if(demo_scroll){
+              demo_func();
+              demo_func();
+            }
+          }
 
     </script>
     </head>
@@ -462,20 +483,7 @@ default:
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
   <script>
 
-        function scroll_func(){
-          if(demo_scroll){
-            var slider = document.getElementById("myRange");
 
-
-          if (Math.round($(window).scrollTop() + $(window).height()) == $(document).height()){
-             $('html, body').animate({scrollTop:0}, {duration: parseInt(slider.value)});
-           }
-
-        if(Math.round($(window).scrollTop())  == 0){
-             $('html, body').animate({scrollTop:$(document).height()-$(window).height()}, {duration: parseInt(slider.value)});
-          }
-        }
-      }
       </script>
   </body>
   </html>

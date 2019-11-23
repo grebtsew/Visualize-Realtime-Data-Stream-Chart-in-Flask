@@ -44,10 +44,13 @@ class SocketServer(Thread):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.bind((HOST, PORT))
             s.listen()
-            while True:
-                conn, addr = s.accept()
-                print('Connected by', addr)
-                Thread(target=self.handle_connection, args=(conn,)).start()
+            try:
+                while True:
+                    conn, addr = s.accept()
+                    print('Connected by', addr)
+                    Thread(target=self.handle_connection, args=(conn,)).start()
+            except Exception as e:
+                print(e)
 
 def safe(json, value):
     try:
