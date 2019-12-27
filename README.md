@@ -46,7 +46,7 @@ See program structure image below:
 
 # Getting Started
 1. Install program by firstly installing all the required packages in python3:
-**Note**: If you want to use docker see ![here](#Docker).
+**Note**: If you want to use docker see [here](#Docker).
 ```
 pip install -r requirements.txt
 ```
@@ -60,10 +60,10 @@ python3 start.py
 
 4. Edit the `Scheduler` file and Comment the `demo()` line, to make sure the demo data streams won't start.
 
-5. Create your stream by looking at the ![heading below](#How-to-Send-data-to-your-Server).
+5. Create your stream by looking at the [heading below](#How-to-Send-data-to-your-Server).
 
 # How to Send data to your Server
-As mentioned in the ![solution heading above](#Solution) there are two ways of sending data streams to this implementation, creating a socket client or creating data stream in the implementation.
+As mentioned in the [solution heading above](#Solution) there are two ways of sending data streams to this implementation, creating a socket client or creating data stream in the implementation.
 
 ## Create a seperate TCP Socket Client
 I created two simple example of tcp socket clients in `examples/`. One that creates a data stream from live stock share prices and one that create a data stream from random numbers.
@@ -106,13 +106,13 @@ Examples of how each chart look and how the data should be represented in json s
 * https://tobiasahlin.com/blog/chartjs-charts-to-get-you-started
 
 ## What is flask?
-![Flask](https://en.wikipedia.org/wiki/Flask_(web_framework)) is a micro web framework, enabling websites to be hosted in python.
+[Flask](https://en.wikipedia.org/wiki/Flask_(web_framework)) is a micro web framework, enabling websites to be hosted in python.
 
 ## What is Chart.JS?
-![Chart.JS](https://www.chartjs.org/) is an opensource project with the main purpose to provide awesome charts for html5 and javascript.
+[Chart.JS](https://www.chartjs.org/) is an opensource project with the main purpose to provide awesome charts for html5 and javascript.
 
 ## What is Plotly?
-![Plotly](https://plot.ly/) is a collection of open source Graphing Libraries for visualizing data in a vast amount of formats.
+[Plotly](https://plot.ly/) is a collection of open source Graphing Libraries for visualizing data in a vast amount of formats.
 
 # Licenses
 See ![license](LICENSE)
