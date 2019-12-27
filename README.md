@@ -25,8 +25,7 @@
 
 # About
 Visualizing data flows are important in a project where maintaining data streams are of priority.
-The abiliy to visualize data in realtime can have advantages in may development areas such as debugging and
-demonstations. In this implementation we are visualizing data in charts using Chart.JS, a simple powerful library for creating charts in Javascript. The server can now also visualize image streams and heatmaps using Plotly, a modern analytics app for enterprises. This implementation utilizes Flask and is developed mainly in python3 and Javascript.
+The abiliy to visualize data in realtime can contribute with huge advantages while debugging code or demonstrating. In this implementation we are visualizing data in charts using Chart.JS, a simple powerful library for creating charts in Javascript. The server can now also visualize image streams and heatmaps using Plotly, a modern analytics app for enterprises. This implementation utilizes Flask and is developed mainly in python3 and Javascript.
 
 <p align="center" >
   <img width="100" height="100" src="images/python.png">
