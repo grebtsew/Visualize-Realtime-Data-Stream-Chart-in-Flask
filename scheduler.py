@@ -6,6 +6,7 @@ from socket_client import SocketClient
 from socket_server import SocketServer
 from image_server import ImageServer
 from data_stream import *
+from http_server import HTTPserver
 
 import threading
 
@@ -23,6 +24,9 @@ def scheduler():
     # Start TCP socket Server
     SocketServer().start()
     ImageServer().start()
+
+    # Start HTTP server
+    HTTPserver().start()
 
     # Can be a smart idea to start streams here!
     # Start some demo flows

@@ -9,9 +9,15 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-    <script>
 
-    function new_card(content) {
+    <script>
+       $(document).ready(function(){
+     $(window).resize(function() {
+    $("#listview").css("margin-top", $("#buttons").height());
+}).resize();
+})
+
+        function new_card(content) {
         var listview = document.getElementById("listview");
 
         var card = document.createElement("DIV");
@@ -168,6 +174,7 @@ default:
 
     var paus = false;
     var demo_scroll = false;
+    var ChartList = [];
 
     $(document).ready(function(){
 
@@ -192,13 +199,13 @@ default:
         //connect to the socket server.
         var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
         var numbers_received = [];
-        var ChartList = [];
 
         //receive socket from server
         socket.on('server', function(data) {
-
+                //console.log(data);
                 var config;
                 var ctx;
+                
                 //console.log(data)
                 const zeros = (m, n) => [...Array(m)].map(e => Array(n).fill(0));
 
@@ -370,8 +377,29 @@ default:
             });
 
 
-
     });
+
+      theme = true
+          function theme_func(){
+          if (theme){
+          ChartList.forEach(function(chart){
+                    obj= document.getElementById(chart.config.id);
+                    $(obj).css('background-color', 'lightgray');
+                  });
+           $('body').css('background-color', 'gray');
+           $('.card').css('background-color', 'lightgray');
+        theme = false;
+      } else {
+      ChartList.forEach(function(chart){
+                     obj= document.getElementById(chart.config.id);
+                    $(obj).css('background-color', 'white');
+                  });
+        $('body').css('background-color', 'white');
+        $('.card').css('background-color', 'white');
+        theme = true;
+        }
+        }
+
 
     function zeros(dimensions) {
         var array = [];
@@ -457,21 +485,74 @@ function scroll_func(){
               demo_func();
             }
           }
+          hide = false;
+
+          function hide_func(){
+            if(hide){
+            hide = false;
+            // unhide
+            }else{
+            hide = true;
+              $( "#buttons" ).fadeOut( "slow", function() {
+               $("#listview").css("margin-top", 0);
+                // Animation complete.
+                });
+            // hide
+            }
+          }
+
+ function calculateDistance(elem,  mouseY) {
+        return Math.floor(Math.sqrt(Math.pow(mouseY - (elem.offset().top+(elem.height()/2)), 2)));
+    }
+
+    $(document).mousemove(function(e){
+  var vertical = e.pageY ;
+
+    if(hide){
+   // console.log(vertical - document.documentElement.scrollTop)
+  if(vertical - document.documentElement.scrollTop <= 200 && !$('header').is(":visible")) {
+    $('#buttons').css("top","0").fadeIn();
+    $("#listview").css("margin-top", $("#buttons").height());
+  } else {
+   $( "#buttons" ).fadeOut( "slow", function() {
+                // Animation complete.
+                    $("#listview").css("margin-top", 0);
+    });
+  }
+  }
+});
 
     </script>
     </head>
   <body>
-  <div class="container">
-      <div class="row">
-          <div class="col-12" id="listview">
-              <div class="card" id="buttons">
+  <center>
+    <div class="card" id="buttons" style="position: fixed; top: 0;left: 50%; transform:translateX(-50%); width=100%; display: block ruby;">
                   <div class="card-body">
-                    <input type="submit" name="Reset_button" value="Clear All" onclick="clear_func();">
-                    <input type="submit" name="Paus_button" value="Paus Toggle" onclick="paus_func();">
-                    <input type="submit" name="Demo_button" value="Demo Mode" onclick="demo_func();">
-                    <input type="range" min="1" max="100000" value="60000" class="slider" id="myRange">
+                      <center><h1>Realtime Data Stream Charts</h1></center>
+                      <center>
+                    <input style="display: inline" type="submit" name="Hide_button" value="Hide" onclick="hide_func();">
+                    <input style="display: inline" type="submit" name="Reset_button" value="Clear All" onclick="clear_func();">
+                    <input style="display: inline"  type="submit" name="Paus_button" value="Paus Toggle" onclick="paus_func();">
+                    <input style="display: inline-block;" type="submit" name="Theme_button" value="Day/Night" onclick="theme_func();">
+                          <div style="display: inline-block;">
+                             <center>  <p>Stop by pressing space!</p>
+                    <input  type="submit" name="Demo_button" value="Demo Mode" onclick="demo_func();">
+                          </center> </div>
+                       <div style="display: inline-block;"><center> <p> Demo Slider Speed </p>
+                    <input type="range" min="1" max="100000" value="60000" class="slider" id="myRange" ></center>
+                      </div>
+
                 </div>
               </div>
+              </center>
+
+
+  <div class="container">
+      <div class="row">
+
+          <div class="col-12" id="listview" style="z-index: -1;" >
+
+            </div>
           </div>
       </div>
   </div>

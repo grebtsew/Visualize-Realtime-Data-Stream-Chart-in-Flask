@@ -12,6 +12,7 @@ import socket
 
 """
 ImageServer is a multithreaded socket server
+This server is used to send larger packages to Flask
 receiving n amount of connections and proxy the messages
 to flask
 """

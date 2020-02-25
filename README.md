@@ -117,6 +117,10 @@ Examples of how each chart look and how the data should be represented in json s
 # Licenses
 See ![license](LICENSE)
 
+# Known Issues
+List of known issues:
+* Ignore the `WebSocket transport not available. Install eventlet or gevent and gevent-websocket for improved performance.` warning as eventlet doesn't support Flask-socketio!
+
 # Sources
 The main inspiration and solutions comes from the following sources:
 * https://gitlab.com/patkennedy79/flask_chartjs_example
