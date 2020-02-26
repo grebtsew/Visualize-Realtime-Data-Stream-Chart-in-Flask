@@ -15,14 +15,17 @@ class SocketClient(Thread):
         self.message = message
 
     def run(self):
-        HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
-        PORT = 65432 # can change this if you want
+        from config_handler import ConfigHandler
+        (HOST, PORT) = ConfigHandler().get_all("SocketServer")
+
+        #HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
+        #PORT = 65432 # can change this if you want
 
         # Create a TCP/IP socket
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         # Bind the socket to the port
-        server_address = (HOST, PORT)
+        server_address = (str(HOST), int(PORT))
 
         sock.connect(server_address)
 

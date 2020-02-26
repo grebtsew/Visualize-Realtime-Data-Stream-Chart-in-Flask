@@ -6,11 +6,9 @@ from random import random
 import json
 
 # defining the api-endpoint
-API_ENDPOINT = "http://localhost:8000"
+API_ENDPOINT = "http://127.0.0.1:8030"
 
 CRYPT = "password-1"
-
-TEXT_TO_READ = "This example explains how to paste your source_code to pastebin.com by sending POST request to the PASTEBIN API."
 
 # data to be sent to api
 data = {

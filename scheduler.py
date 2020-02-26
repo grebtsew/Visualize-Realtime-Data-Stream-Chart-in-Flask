@@ -6,6 +6,7 @@ from socket_client import SocketClient
 from socket_server import SocketServer
 from image_server import ImageServer
 from data_stream import *
+from http_client import HTTPClient
 from http_server import HTTPserver
 
 import threading
@@ -28,6 +29,8 @@ def scheduler():
     # Start HTTP server
     HTTPserver().start()
 
+    # TODO: add RTSP stream handler
+    # TODO: fix scroll demo function!
     # Can be a smart idea to start streams here!
     # Start some demo flows
     demo()
@@ -37,6 +40,9 @@ def demo():
     # Start Example TCP socket client
     for message in samplelist: # see samplelist in /data_streams/samples.py
         SocketClient(message=message).start()
+
+    # Start HTTP example client
+    HTTPClient().start()
 
     # Start Example Random Number Stream
     DataStream(random_nr_config, random_nr).start()

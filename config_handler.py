@@ -1,22 +1,32 @@
-import ConfigParser
-import io
+import configparser
 
-# Load the configuration file
-with open("config.ini") as f:
-    sample_config = f.read()
-config = ConfigParser.RawConfigParser(allow_no_value=True)
-config.readfp(io.BytesIO(sample_config))
+class ConfigHandler():
 
-# List all contents
-print("List all contents")
-for section in config.sections():
-    print("Section: %s" % section)
-    for options in config.options(section):
-        print("x %s:::%s:::%s" % (options,
-                                  config.get(section, options),
-                                  str(type(options))))
+    def __init__(self, path="config.ini"):
+        self.path = path
+        self.config = self.readconfig_file()
 
-# Print some contents
-print("\nPrint some contents")
-print(config.get('other', 'use_anonymous'))  # Just get the value
-print(config.getboolean('other', 'use_anonymous'))  # You know the datatype?
+    def readconfig_file(self):
+        config = configparser.ConfigParser()
+        config.read("config.ini")
+        return config
+
+    def __str__(self):
+        print("List all contents")
+        for section in self.config.sections():
+            print("Section: %s" % section)
+            for options in self.config.options(section):
+                print("x %s:::%s:::%s" % (options,
+                                          self.config.get(section, options),
+                                          str(type(options))))
+    def get_all(self, section):
+        res = []
+        for options in self.config.options(section):
+            res.append(self.config.get(section, options))
+
+        return res
+
+    def get(self, section, value):
+        return self.config.get(section, value)
+    def getboolean(self, section, value):
+        return self.config.getboolean(section,value)

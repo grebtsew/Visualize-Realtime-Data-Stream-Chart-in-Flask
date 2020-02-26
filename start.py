@@ -2,13 +2,15 @@ from flask_handler import *
 import webbrowser
 import threading
 import functools
+from config_handler import ConfigHandler
 
 """
 Start Program with this file by running "python3 start.py"
 """
 
-port = 5000
-url = "http://127.0.0.1:{0}".format(port)
+(HOST, PORT) = ConfigHandler().get_all("Website")
+
+url = "http://"+HOST+":{0}".format(PORT)
 
 if __name__ == '__main__':
     threading.Timer(1, functools.partial( webbrowser.open, url )).start()

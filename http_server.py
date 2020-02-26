@@ -10,8 +10,11 @@ from functools import partial
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 class S(BaseHTTPRequestHandler):
-    CRYPT = "password-1"
-    connection_list = []
+
+    def __init__(self, CRYPT="password-1", *args, **kwargs):
+        self.CRYPT = CRYPT
+        super().__init__(*args, **kwargs)
+
 
 
     def _set_response(self):
@@ -36,31 +39,30 @@ class S(BaseHTTPRequestHandler):
 
             content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
             post_data = self.rfile.read(content_length) # <--- Gets the data itself
-            #data = simplejson.loads(post_data)
-            #print(post_data)
             # decode incoming data // see if password is correct here!
+            try:
+                data = json.loads(post_data)
 
-            data = json.loads(post_data)
-            if data['api_crypt'] :
-                if data['api_crypt'] == self.CRYPT:
-                    
-                    send_request(id = data["id"], data=data["value"], type =safe(data, "type"), active_points =safe(data, "active_points"),
-                    _label=safe(data, "label"), _legend=safe(data, "legend"), _width = safe(data, "width"), _height = safe(data, "height"),
-                    _name = safe(data, "name"), fill = safe(data, "fill"), backgroundColor = safe(data, "backgroundColor"),
-                    borderColor = safe(data, "borderColor"))
-
+                if data['api_crypt'] :
+                    if data['api_crypt'] == self.CRYPT:
+                        send_request(id = data["id"], data=data["value"], type =safe(data, "type"), active_points =safe(data, "active_points"),
+                        _label=safe(data, "label"), _legend=safe(data, "legend"), _width = safe(data, "width"), _height = safe(data, "height"),
+                        _name = safe(data, "name"), fill = safe(data, "fill"), backgroundColor = safe(data, "backgroundColor"),
+                        borderColor = safe(data, "borderColor"))
+            except Exception as e:
+                pass
         self._set_response()
 
 class HTTPserver(Thread):
-
-    PORT = 8000
 
     def __init__(self):
         super().__init__()
 
     def run(self):
-        server_address = ('localhost', self.PORT)
-        httpd = HTTPServer(server_address,S)
+        from config_handler import ConfigHandler
+        (HOST, PORT, CRYPT) = ConfigHandler().get_all("HTTPServer")
+        server_address = (str(HOST),int(PORT))
+        httpd = HTTPServer(server_address, partial(S, CRYPT))
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:

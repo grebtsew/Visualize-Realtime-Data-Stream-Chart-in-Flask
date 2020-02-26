@@ -3,3 +3,4 @@ Flask==1.1.1
 yahoo-fin==0.8.2
 opencv-python>=3.4.1.15
 requests>=2.23.0
+ConfigParser>=4.0.2

@@ -62,6 +62,9 @@ python3 start.py
 
 5. Create your stream by looking at the [heading below](#How-to-Send-data-to-your-Server).
 
+# Change Config
+Ports and addresses can be changed in the `config.ini` file.
+
 # How to Send data to your Server
 As mentioned in the [solution heading above](#Solution) there are two ways of sending data streams to this implementation, creating a socket client or creating data stream in the implementation.
 
