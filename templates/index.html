@@ -1,173 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Creating Real-Time Charts with Flask</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+  <meta charset="UTF-8">
+  <title>Creating Real-Time Charts with Flask</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 
-    <script>
-       $(document).ready(function(){
-     $(window).resize(function() {
-    $("#listview").css("margin-top", $("#buttons").height());
-}).resize();
-})
+  <script>
+    // Leave margin size for Buttons- Header
+    $(document).ready(function () {
+      $(window).resize(function () {
+        $("#listview").css("margin-top", $("#buttons").height());
+      }).resize();
+    });
 
-        function new_card(content) {
-        var listview = document.getElementById("listview");
+    // Make Buttons header dynamic width
+    $(document).ready(function () {
+      $(window).resize(function () {
+        $("#buttons").css("width", "100%");
+      }).resize();
+    });
 
-        var card = document.createElement("DIV");
-        card.className = "card";
-        var card_body = document.createElement("DIV");
-        card_body.className = "card-body";
-        card_body.style.overflow = "auto";
-        card_body.appendChild(content);
-        card.appendChild(card_body);
+    function new_card(content) {
+      var listview = document.getElementById("listview");
 
-        // appending button to div
-        listview.appendChild(card);
+      var card = document.createElement("DIV");
+      card.className = "card";
+      var card_body = document.createElement("DIV");
+      card_body.className = "card-body";
+      card_body.style.overflow = "auto";
+      card_body.appendChild(content);
+      card.appendChild(card_body);
+
+      // appending button to div
+      listview.appendChild(card);
     }
 
     function create_new_config(data) {
-        switch(data.type) {
-    case 'line':
-      return  simple_config(data);
-      break;
-    case 'bar':
-      return  simple_config(data);
-      break;
-    case 'pie':
-      return  no_axis_config(data);
-      break;
-    case 'radar':
-      return  no_axis_config(data);
-      break;
-    case 'polarArea':
-      return  no_axis_config(data);
-      break;
-    case 'doughnut':
-      return  no_axis_config(data);
-      break;
-    case 'horizontalBar':
-      return simple_config(data);
-    break;
-    case 'bubble':
-      return  simple_config(data);
-      break;
-    case 'custom':
-      return custom_config(data);
-      break;
-default:
+      switch (data.type) {
+        case 'line':
+          return simple_config(data);
+          break;
+        case 'bar':
+          return simple_config(data);
+          break;
+        case 'pie':
+          return no_axis_config(data);
+          break;
+        case 'radar':
+          return no_axis_config(data);
+          break;
+        case 'polarArea':
+          return no_axis_config(data);
+          break;
+        case 'doughnut':
+          return no_axis_config(data);
+          break;
+        case 'horizontalBar':
+          return simple_config(data);
+          break;
+        case 'bubble':
+          return simple_config(data);
+          break;
+        case 'custom':
+          return custom_config(data);
+          break;
+        default:
 
-}
+      }
     }
 
-    function custom_config(data){
+    function custom_config(data) {
       return data.config;
     }
 
-        function generate_dataset(data){
-              var datasets = []
-        for(i = 0; i < data.legend.length; i++){
-          datasets.push({
-              label: data.legend[i],
-              backgroundColor: data.backgroundColor[i],
-              borderColor: data.borderColor[i],
-              data: [data.value[i]],
-              fill: false, // TODO
+    function generate_dataset(data) {
+      var datasets = []
+      for (i = 0; i < data.legend.length; i++) {
+        datasets.push({
+          label: data.legend[i],
+          backgroundColor: data.backgroundColor[i],
+          borderColor: data.borderColor[i],
+          data: [data.value[i]],
+          fill: false, // TODO
         });
-        }
-      return datasets;
       }
+      return datasets;
+    }
 
 
-    function no_axis_config(data){
+    function no_axis_config(data) {
 
       var datasets = generate_dataset(data);
-    //  console.log(datasets);
-      return  config = {
-            type: data.type,
-            id: data.id,
+      //  console.log(datasets);
+      return config = {
+        type: data.type,
+        id: data.id,
 
-            width: data.width,
-            height: data.height,
+        width: data.width,
+        height: data.height,
 
-            data: {
-                labels: [data.label],
-                datasets: datasets,
-            },
-            options: {
-                responsive: true,
-                title: {
-                    display: true,
-                    text: data.name
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
-                },
-            }
-        };
+        data: {
+          labels: [data.label],
+          datasets: datasets,
+        },
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: data.name
+          },
+          tooltips: {
+            mode: 'index',
+            intersect: false,
+          },
+          hover: {
+            mode: 'nearest',
+            intersect: true
+          },
+        }
+      };
 
 
     }
 
 
 
-    function simple_config(data){
+    function simple_config(data) {
       var datasets = generate_dataset(data);
-      return  config = {
-            type: data.type,
-            id: data.id,
+      return config = {
+        type: data.type,
+        id: data.id,
 
-            width: data.width,
-            height: data.height,
+        width: data.width,
+        height: data.height,
 
-            data: {
-                labels: [],
-                datasets: datasets,
-            },
-            options: {
-                responsive: true,
-                title: {
-                    display: true,
-                    text: data.name
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
-                },
-                scales: {
-                    xAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Time'
-                        }
-                    }],
-                    yAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: data.label
-                        }
-                    }]
-                }
+        data: {
+          labels: [],
+          datasets: datasets,
+        },
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: data.name
+          },
+          tooltips: {
+            mode: 'index',
+            intersect: false,
+          },
+          hover: {
+            mode: 'nearest',
+            intersect: true
+          },
+          scales: {
+            xAxes: [{
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Time'
+              }
+            }],
+            yAxes: [{
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: data.label
+              }
+            }]
+          }
 
-            }
-        };
+        }
+      };
 
     }
 
@@ -176,385 +185,419 @@ default:
     var demo_scroll = false;
     var ChartList = [];
 
-    $(document).ready(function(){
+    $(document).ready(function () {
 
       // scroll listener
-      window.addEventListener('scroll', function(e) {
+      window.addEventListener('scroll', function (e) {
         scroll_func();
       });
 
-      window.addEventListener('resize', function(event){
+      window.addEventListener('resize', function (event) {
         resized();
       });
 
       document.addEventListener('keyup', (e) => {
-      //  console.log("test");
-      //  console.log(e.code);
+        //  console.log("test");
+        //  console.log(e.code);
         if (e.code === "KeyD") {
           demo_func();
 
         }
       });
 
-        //connect to the socket server.
-        var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
-        var numbers_received = [];
+      //connect to the socket server.
+      var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+      var numbers_received = [];
 
-        //receive socket from server
-        socket.on('server', function(data) {
-                //console.log(data);
-                var config;
-                var ctx;
-                
-                //console.log(data)
-                const zeros = (m, n) => [...Array(m)].map(e => Array(n).fill(0));
+      //receive socket from server
+      socket.on('server', function (data) {
+        //console.log(data);
+        var config;
+        var ctx;
+        if(data.type == "video_stream"){
+          if (document.getElementById(data.id)) {
+          } else{
+            var container = document.createElement("DIV");
+            var title = document.createElement("H1");
+            title.style.textAlign = "center";
+            var node = document.createTextNode(data.name);
+            title.appendChild(node);
+            container.appendChild(title);
+            var image = document.createElement("IMG");
+            image.className = "image";
+            image.id = data.id;
+            image.style.height = '100%';
+            image.style.width = '100%';
 
-                if(data.type == "heatmap"){
-                  if(document.getElementById(data.id)){
-                    // set heatmap
-                    var parent = document.getElementById(data.id);
-                    var div = parent.firstChild;
-                    var arr = div.data[0].z
-                    var d = data.value
-                    arr[d[0]][d[1]] += 1;
-                    //Plotly.update(div, arr)
-                    Plotly.redraw(div,arr);
+            image.src = "{{ url_for('video_feed', device=0)}}"; //TODO
+            console.log(image.src)
+            container.appendChild(image);
+            new_card(container);
+          
+          }
+          }
+        
 
-                  }
-                  else {
-                    var heatmaparray = new Array(data.width).fill(0).map(() => new Array(data.height).fill(0));
-                    var d = data.value;
-                    heatmaparray[d[0]][d[1]] += 1;
-                        var heatmap = [
-                          {
-                            z: heatmaparray,
-                            type: 'heatmap'
-                          }
-                  ];
-                  var layout = {
-                  title: data.name,
-                  autosize: true
-                };
-                  // create new card
-                  var div_con = document.createElement("DIV");
-                  var div = document.createElement("DIV");
-                  div_con.id = data.id;
-                  div.style.width = "100%";
-                  Plotly.newPlot(div, heatmap, layout);
-                  div_con.appendChild(div);
-                  new_card(div_con);
-                  }
-                }
+        //console.log(data)
+        const zeros = (m, n) => [...Array(m)].map(e => Array(n).fill(0));
 
-                if(data.type == "image"){
-                    if(document.getElementById(data.id)){
-                      var image = document.getElementById(data.id);
-                      image.src = data.value;
-                    } else {
-                  var container = document.createElement("DIV");
-                  var title = document.createElement("H1");
-                  title.style.textAlign = "center";
-                  var node = document.createTextNode(data.name);
-                  title.appendChild(node);
-                  container.appendChild(title);
+        if (data.type == "heatmap") {
+          if (document.getElementById(data.id)) {
+            // set heatmap
+            var parent = document.getElementById(data.id);
+            var div = parent.firstChild;
+            var arr = div.data[0].z
+            var d = data.value
+            arr[d[0]][d[1]] += 1;
+            //Plotly.update(div, arr)
+            Plotly.redraw(div, arr);
 
-                  var image = document.createElement("IMG");
-                  image.className = "image";
-                  image.id = data.id;
-                  image.style.height = '100%';
-                  image.style.width = '100%';
-                  image.src = data.value;
-                  container.appendChild(image);
-                  new_card(container);
-                  }
-                }
+          }
+          else {
+            var heatmaparray = new Array(data.width).fill(0).map(() => new Array(data.height).fill(0));
+            var d = data.value;
+            heatmaparray[d[0]][d[1]] += 1;
+            var heatmap = [
+              {
+                z: heatmaparray,
+                type: 'heatmap'
+              }
+            ];
+            var layout = {
+              title: data.name,
+              autosize: true
+            };
+            // create new card
+            var div_con = document.createElement("DIV");
+            var div = document.createElement("DIV");
+            div_con.id = data.id;
+            div.style.width = "100%";
+            Plotly.newPlot(div, heatmap, layout);
+            div_con.appendChild(div);
+            new_card(div_con);
+          }
+        }
 
-                if(data.type == "text"){
-                    if(document.getElementById(data.id)){
-                      document.getElementById(data.id).innerHTML += "> "+ data.value + "<br />";
-                      $('#'+data.id).animate({scrollTop: $('#'+data.id).prop("scrollHeight")}, 500);
-                    } else {
-                  var container = document.createElement("DIV");
-                  var title = document.createElement("H1");
-                  title.style.textAlign = "center";
-                  var node = document.createTextNode(data.name);
-                  title.appendChild(node);
-                  container.appendChild(title);
+        if (data.type == "image") {
+          if (document.getElementById(data.id)) {
+            var image = document.getElementById(data.id);
+            image.src = data.value;
+          } else {
+            var container = document.createElement("DIV");
+            var title = document.createElement("H1");
+            title.style.textAlign = "center";
+            var node = document.createTextNode(data.name);
+            title.appendChild(node);
+            container.appendChild(title);
 
-                  var text = document.createElement("DIV");
-                  text.className = "text";
-                  text.id = data.id;
-                  text.style.background = data.backgroundColor;
-                  text.style.color = data.borderColor;
-                  text.style.height = '500px';
-                  text.style.overflow = 'scroll';
-                  text.style.width = '100%';
-                  text.innerHTML = "> "+ data.value + "<br />";
-                  container.appendChild(text);
-                  new_card(container);
-                  }
-                }
+            var image = document.createElement("IMG");
+            image.className = "image";
+            image.id = data.id;
+            image.style.height = '100%';
+            image.style.width = '100%';
+            image.src = data.value;
+            container.appendChild(image);
+            new_card(container);
+          }
+        }
 
-                // see if chart is already created
-                if(document.getElementById(data.id)){
+        if (data.type == "text") {
+          if (document.getElementById(data.id)) {
+            document.getElementById(data.id).innerHTML += "> " + data.value + "<br />";
+            $('#' + data.id).animate({ scrollTop: $('#' + data.id).prop("scrollHeight") }, 500);
+          } else {
+            var container = document.createElement("DIV");
+            var title = document.createElement("H1");
+            title.style.textAlign = "center";
+            var node = document.createTextNode(data.name);
+            title.appendChild(node);
+            container.appendChild(title);
 
-                ChartList.forEach(function(chart){
-                    if(chart.config.id == data.id){
-                      config = chart.config;
-                      ctx = chart;
-                    }
-                  });
-                  if( config == null || ctx == null || paus){
-                    return;
-                  }
+            var text = document.createElement("DIV");
+            text.className = "text";
+            text.id = data.id;
+            text.style.background = data.backgroundColor;
+            text.style.color = data.borderColor;
+            text.style.height = '500px';
+            text.style.overflow = 'scroll';
+            text.style.width = '100%';
+            text.innerHTML = "> " + data.value + "<br />";
+            container.appendChild(text);
+            new_card(container);
+          }
+        }
 
-                  if(data.type == "custom"){
-                    config = data.config
-                    ctx.update();
+        // see if chart is already created
+        if (document.getElementById(data.id)) {
 
-                  } else {
-
-                  // Shift Chart
-                  if (config.data.labels.length === data.active_points) {
-                      config.data.labels.shift();
-                      config.data.datasets.forEach(function(datavalue){
-                        datavalue.data.shift();
-                      });
-                  }
-
-                  // Add new Value
-                  config.data.labels.push(data.time);
-                  var data_set = false;
-
-                    var j = data.legend.length;
-                    for (i = 0; i < j; i++){
-
-                    if(config.data.datasets.length > 1){
-
-                    config.data.datasets.forEach(function(datavalue){
-                      if(datavalue.label == data.legend[i]){
-                        data_set = true;
-                      datavalue.data.push(data.value[i]);
-                      }
-                    });
-                  } else {
-
-                      if(config.data.datasets[0].label == data.legend[i]){
-                        data_set = true;
-                      config.data.datasets[0].data.push(data.value[i]);
-                  }
-                }
-
-              // Create new graph if label doesn't exist.
-              if (!data_set){
-                config.data.datasets.push({
-                    label: [data.legend[i]],
-                    backgroundColor: [data.backgroundColor[i]],
-                    borderColor: [data.borderColor[i]],
-                    data: [data.value[i]],
-                    fill: false,
-              });
+          ChartList.forEach(function (chart) {
+            if (chart.config.id == data.id) {
+              config = chart.config;
+              ctx = chart;
             }
+          });
+          if (config == null || ctx == null || paus) {
+            return;
           }
 
+          if (data.type == "custom") {
+            config = data.config
             ctx.update();
+
+          } else {
+
+            // Shift Chart
+            if (config.data.labels.length === data.active_points) {
+              config.data.labels.shift();
+              config.data.datasets.forEach(function (datavalue) {
+                datavalue.data.shift();
+              });
             }
-                } else {
-                  // First time new Id appears
-                  // Create new graph
-                  var canvas = document.createElement('CANVAS');
-                  canvas.id = data.id;
-                  var config = create_new_config(data);
 
-                  //console.log(config);
+            // Add new Value
+            config.data.labels.push(data.time);
+            var data_set = false;
 
-                  var lineChart = new Chart(canvas, config);
+            var j = data.legend.length;
+            for (i = 0; i < j; i++) {
 
-                  ChartList.push(lineChart);
+              if (config.data.datasets.length > 1) {
 
-                  new_card(canvas);
+                config.data.datasets.forEach(function (datavalue) {
+                  if (datavalue.label == data.legend[i]) {
+                    data_set = true;
+                    datavalue.data.push(data.value[i]);
+                  }
+                });
+              } else {
+
+                if (config.data.datasets[0].label == data.legend[i]) {
+                  data_set = true;
+                  config.data.datasets[0].data.push(data.value[i]);
                 }
-            });
+              }
+
+              // Create new graph if label doesn't exist.
+              if (!data_set) {
+                config.data.datasets.push({
+                  label: [data.legend[i]],
+                  backgroundColor: [data.backgroundColor[i]],
+                  borderColor: [data.borderColor[i]],
+                  data: [data.value[i]],
+                  fill: false,
+                });
+              }
+            }
+
+            ctx.update();
+          }
+        } else {
+          // First time new Id appears
+          // Create new graph
+          var canvas = document.createElement('CANVAS');
+          canvas.id = data.id;
+          var config = create_new_config(data);
+
+          //console.log(config);
+
+          var lineChart = new Chart(canvas, config);
+
+          ChartList.push(lineChart);
+
+          new_card(canvas);
+        }
+      });
 
 
     });
 
-      theme = true
-          function theme_func(){
-          if (theme){
-          ChartList.forEach(function(chart){
-                    obj= document.getElementById(chart.config.id);
-                    $(obj).css('background-color', 'lightgray');
-                  });
-           $('body').css('background-color', 'gray');
-           $('.card').css('background-color', 'lightgray');
+    theme = true
+    function theme_func() {
+      if (theme) {
+        ChartList.forEach(function (chart) {
+          obj = document.getElementById(chart.config.id);
+          $(obj).css('background-color', 'lightgray');
+        });
+        $('body').css('background-color', 'gray');
+        $('.card').css('background-color', 'lightgray');
         theme = false;
       } else {
-      ChartList.forEach(function(chart){
-                     obj= document.getElementById(chart.config.id);
-                    $(obj).css('background-color', 'white');
-                  });
+        ChartList.forEach(function (chart) {
+          obj = document.getElementById(chart.config.id);
+          $(obj).css('background-color', 'white');
+        });
         $('body').css('background-color', 'white');
         $('.card').css('background-color', 'white');
         theme = true;
-        }
-        }
-
-
-    function zeros(dimensions) {
-        var array = [];
-
-        for (var i = 0; i < dimensions[0]; ++i) {
-            array.push(dimensions.length == 1 ? 0 : zeros(dimensions.slice(1)));
-        }
-
-        return array;
-    }
-
-
-    function clear_func(){
-    // Remove all charts and data
-  //  console.log("clear");
-    ChartList = [];
-
-    var listview = document.getElementById('listview');
-  //  console.log(listview);
-
-    var children = listview.children;
-
-    for (let child of children) {
-      if(child.id != "buttons"){
-        child.remove()
       }
     }
 
-  }
 
-  function Create2DArray(rows,columns) {
-     var x = new Array(rows);
-     for (var i = 0; i < rows; i++) {
-         x[i] = new Array(columns).fill(0);
-     }
-     return x;
-  }
+    function zeros(dimensions) {
+      var array = [];
 
-    function paus_func(){
+      for (var i = 0; i < dimensions[0]; ++i) {
+        array.push(dimensions.length == 1 ? 0 : zeros(dimensions.slice(1)));
+      }
+
+      return array;
+    }
+
+
+    function clear_func() {
+      // Remove all charts and data
+      //  console.log("clear");
+      ChartList = [];
+
+      var listview = document.getElementById('listview');
+      //  console.log(listview);
+
+      var children = listview.children;
+
+      for (let child of children) {
+        if (child.id != "buttons") {
+          child.remove()
+        }
+      }
+
+    }
+
+    function Create2DArray(rows, columns) {
+      var x = new Array(rows);
+      for (var i = 0; i < rows; i++) {
+        x[i] = new Array(columns).fill(0);
+      }
+      return x;
+    }
+
+    function paus_func() {
       // Toggle paus variable
-      if (paus){
+      if (paus) {
         paus = false;
       } else {
         paus = true;
       }
     }
 
-    function demo_func(){
+    function demo_func() {
       // Toggle paus variable
       //console.log("demo_change")
-      if (demo_scroll){
+      if (demo_scroll) {
         demo_scroll = false;
         $('html, body').stop();
 
       } else {
         demo_scroll = true;
-        scrollTo(0,1);
-        scrollTo(0,0);
+        scrollTo(0, 1);
+        scrollTo(0, 0);
       }
     }
 
     function sleep(delay) {
-        var start = new Date().getTime();
-        while (new Date().getTime() < start + delay);
+      var start = new Date().getTime();
+      while (new Date().getTime() < start + delay);
     }
 
-function scroll_func(){
-      if(demo_scroll){
+    function scroll_func() {   //TODO: fix scroll demo function!
+
+      if (demo_scroll) {
         var slider = document.getElementById("myRange");
 
-    if (Math.round($(window).scrollTop() + $(window).height()) == $(document).height()-1){
-         $('html, body').animate({scrollTop:0}, {duration: parseInt(slider.value)});
-    }
+        if (Math.round($(window).scrollTop() + $(window).height()) == $(document).height() - 1) {
+          $('html, body').animate({ scrollTop: 0 }, { duration: parseInt(slider.value) });
+        }
 
-    if(Math.round($(window).scrollTop())  == 0){
-         $('html, body').animate({scrollTop:Math.round($(document).height()-$(window).height())}, {duration: parseInt(slider.value)});
+        if (Math.round($(window).scrollTop()) == 0) {
+          $('html, body').animate({ scrollTop: Math.round($(document).height() - $(window).height()) }, { duration: parseInt(slider.value) });
+        }
       }
     }
-  }
-          function resized(){
-            if(demo_scroll){
-              demo_func();
-              demo_func();
-            }
-          }
-          hide = false;
+    function resized() {
+      if (demo_scroll) {
+        demo_func();
+        demo_func();
+      }
+    }
+    hide = false;
 
-          function hide_func(){
-            if(hide){
-            hide = false;
-            // unhide
-            }else{
-            hide = true;
-              $( "#buttons" ).fadeOut( "slow", function() {
-               $("#listview").css("margin-top", 0);
-                // Animation complete.
-                });
-            // hide
-            }
-          }
-
- function calculateDistance(elem,  mouseY) {
-        return Math.floor(Math.sqrt(Math.pow(mouseY - (elem.offset().top+(elem.height()/2)), 2)));
+    function hide_func() {
+      if (hide) {
+        hide = false;
+        // unhide
+      } else {
+        hide = true;
+        $("#buttons").fadeOut("slow", function () {
+          $("#listview").css("margin-top", 0);
+          // Animation complete.
+        });
+        // hide
+      }
     }
 
-    $(document).mousemove(function(e){
-  var vertical = e.pageY ;
+    function calculateDistance(elem, mouseY) {
+      return Math.floor(Math.sqrt(Math.pow(mouseY - (elem.offset().top + (elem.height() / 2)), 2)));
+    }
 
-    if(hide){
-   // console.log(vertical - document.documentElement.scrollTop)
-  if(vertical - document.documentElement.scrollTop <= 200 && !$('header').is(":visible")) {
-    $('#buttons').css("top","0").fadeIn();
-    $("#listview").css("margin-top", $("#buttons").height());
-  } else {
-   $( "#buttons" ).fadeOut( "slow", function() {
-                // Animation complete.
-                    $("#listview").css("margin-top", 0);
+    $(document).mousemove(function (e) {
+      var vertical = e.pageY;
+
+      if (hide) {
+        // console.log(vertical - document.documentElement.scrollTop)
+        if (vertical - document.documentElement.scrollTop <= 200 && !$('header').is(":visible")) {
+          $('#buttons').css("top", "0").fadeIn();
+          $("#listview").css("margin-top", $("#buttons").height());
+        } else {
+          $("#buttons").fadeOut("slow", function () {
+            // Animation complete.
+            $("#listview").css("margin-top", 0);
+          });
+        }
+      }
     });
-  }
-  }
-});
 
-    </script>
-    </head>
-  <body>
+  </script>
+</head>
+
+<body>
   <center>
-    <div class="card" id="buttons" style="position: fixed; top: 0;left: 50%; transform:translateX(-50%); width=100%; display: block ruby;">
-                  <div class="card-body">
-                      <center><h1>Realtime Data Stream Charts</h1></center>
-                      <center>
-                    <input style="display: inline" type="submit" name="Hide_button" value="Hide" onclick="hide_func();">
-                    <input style="display: inline" type="submit" name="Reset_button" value="Clear All" onclick="clear_func();">
-                    <input style="display: inline"  type="submit" name="Paus_button" value="Paus Toggle" onclick="paus_func();">
-                    <input style="display: inline-block;" type="submit" name="Theme_button" value="Day/Night" onclick="theme_func();">
-                          <div style="display: inline-block;">
-                             <center>  <p>Stop by pressing space!</p>
-                    <input  type="submit" name="Demo_button" value="Demo Mode" onclick="demo_func();">
-                          </center> </div>
-                       <div style="display: inline-block;"><center> <p> Demo Slider Speed </p>
-                    <input type="range" min="1" max="100000" value="60000" class="slider" id="myRange" ></center>
-                      </div>
+    <div class="card" id="buttons"
+      style="position: fixed; top: 0;left: 50%; transform:translateX(-50%); width=100%; display: block ruby;">
+      <div class="card-body">
+        <center>
+          <h1>Realtime Data Stream Charts</h1>
+        </center>
+        <center>
+          <input style="display: inline" type="submit" name="Hide_button" value="Hide" onclick="hide_func();">
+          <input style="display: inline" type="submit" name="Reset_button" value="Clear All" onclick="clear_func();">
+          <input style="display: inline" type="submit" name="Paus_button" value="Paus Toggle" onclick="paus_func();">
+          <input style="display: inline-block;" type="submit" name="Theme_button" value="Day/Night"
+            onclick="theme_func();">
+          <div style="display: inline-block;">
+            <center>
+              <p>Stop by pressing space!</p>
+              <input type="submit" name="Demo_button" value="Demo Mode" onclick="demo_func();">
+            </center>
+          </div>
+          <div style="display: inline-block;">
+            <center>
+              <p> Demo Slider Speed </p>
+              <input type="range" min="1" max="100000" value="60000" class="slider" id="myRange">
+            </center>
+          </div>
 
-                </div>
-              </div>
-              </center>
+      </div>
+    </div>
+  </center>
 
 
   <div class="container">
-      <div class="row">
+    <div class="row">
 
-          <div class="col-12" id="listview" style="z-index: -1;" >
+      <div class="col-12" id="listview" style="z-index: -1;">
 
-            </div>
-          </div>
       </div>
+    </div>
+  </div>
   </div>
   <!--suppress JSUnresolvedLibraryURL -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -565,6 +608,7 @@ function scroll_func(){
   <script>
 
 
-      </script>
-  </body>
-  </html>
+  </script>
+</body>
+
+</html>

@@ -1,11 +1,11 @@
 # include new streams to start in this file
 
-from data_streams.samples import *
+from data_streams.samples import samplelist, random_nr_config, random_nr
 
 from socket_client import SocketClient
 from socket_server import SocketServer
 from image_server import ImageServer
-from data_stream import *
+from data_stream import DataStream
 from http_client import HTTPClient
 from http_server import HTTPserver
 
@@ -28,9 +28,8 @@ def scheduler():
 
     # Start HTTP server
     HTTPserver().start()
-
-    # TODO: add RTSP stream handler
-    # TODO: fix scroll demo function!
+    # TODO: add try & catch where is needed! For demo safety!
+ 
     # Can be a smart idea to start streams here!
     # Start some demo flows
     demo()

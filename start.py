@@ -1,4 +1,4 @@
-from flask_handler import *
+from flask_handler import start_flask_application
 import webbrowser
 import threading
 import functools
@@ -8,7 +8,7 @@ from config_handler import ConfigHandler
 Start Program with this file by running "python3 start.py"
 """
 
-(HOST, PORT) = ConfigHandler().get_all("Website")
+[HOST, PORT] = ConfigHandler().get_all("Website") # pylint: disable=unbalanced-tuple-unpacking
 
 url = "http://"+HOST+":{0}".format(PORT)
 

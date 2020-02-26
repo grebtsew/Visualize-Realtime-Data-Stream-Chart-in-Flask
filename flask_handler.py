@@ -1,5 +1,5 @@
 from flask_socketio import SocketIO, emit
-from flask import Flask, render_template, url_for, copy_current_request_context
+from flask import Flask,Response, render_template, url_for, copy_current_request_context
 
 from threading import Thread, Event
 from scheduler import *
@@ -18,15 +18,46 @@ socketio = SocketIO(app)
 thread = Thread() # scheduler thread
 thread_stop_event = Event()
 
+#lock = threading.Lock()
+
 def start_flask_application():
     from config_handler import ConfigHandler
-    [HOST,PORT] = ConfigHandler().get_all("Flask")
-    socketio.run(app, host=HOST, port=PORT)
+    [HOST,PORT] = ConfigHandler().get_all("Flask") # pylint: disable=unbalanced-tuple-unpacking
+    socketio.run(app, host=HOST, port=PORT) # SocketIOServer
+    app.run(host=HOST, port=PORT) # Other Server
 
 @app.route('/')
 def index():
     #only by sending this page first will the client be connected to the socketio instance
     return render_template('index.html')
+
+vcapture_list = []
+def gen(device):
+    import cv2
+    if(device in vcapture_list):
+        print("Device stream already streaming " + str(device))
+    vcap = cv2.VideoCapture(device)
+    vcapture_list.append(device)
+    while True:
+        ret, frame = vcap.read()
+        if frame is None:
+            continue
+        (flag, encodedImage) = cv2.imencode(".jpg", frame)
+        if not flag:
+            continue
+        yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
+        bytearray(encodedImage) + b'\r\n')
+
+
+@app.route('/video_feed/<device>')
+def video_feed(device):
+    # return the response generated along with the specific media
+    # type (mime type)
+    print(device)
+    try:
+        return Response(gen(int(device)),mimetype = "multipart/x-mixed-replace; boundary=frame")
+    except Exception as e:
+        return Response(gen(device),mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 @socketio.on('connect', namespace='/test')
 def test_connect():

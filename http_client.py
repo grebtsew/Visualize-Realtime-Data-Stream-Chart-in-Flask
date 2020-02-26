@@ -18,22 +18,23 @@ class HTTPClient(Thread):
         (HOST, PORT, CRYPT) = ConfigHandler().get_all("HTTPServer")
 
         data = {
-            'id': 22334422,
-            'value': [round(5 * 100, 3)],
-            'type': 'line',
-            'active_points': 20,
-            'label': ['Random HTTP Number'],
-            'legend': ['random'],
-            'name': 'Random Number Example',
-            'borderColor': ['#3e95cd'],
-            'backgroundColor': ['#3e95cd'],
+            'id': 12,
+            'value': 0,
+            'type': 'video_stream',
+            #'type': 'line',
+            #'active_points': 20,
+            #'label': ['Random HTTP Number'],
+            #'legend': ['random'],
+            'name': 'Video Stream HTTP Example',
+            #'borderColor': ['#3e95cd'],
+            #'backgroundColor': ['#3e95cd'],
             'api_crypt':CRYPT
         }
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         API_ENDPOINT = "http://"+HOST+":"+PORT
 
-        while True:
-            # sending post request and saving response as response object
-            r = requests.post(url=API_ENDPOINT, data=json.dumps(data), headers=headers)
-            time.sleep(2)
+        #while True:
+        # sending post request and saving response as response object
+        r = requests.post(url=API_ENDPOINT, data=json.dumps(data), headers=headers)
+        time.sleep(2)
 

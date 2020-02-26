@@ -38,6 +38,9 @@ while True:
     cv2.waitKey(1)
 """
 
+from time import sleep
+while True:
+    sleep(10) # keep thread alive
 
 # TODO: When this is working, update DEMO in readme
 # TODO: WHen this is working, update readme images and text
