@@ -12,6 +12,164 @@
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 
   <script>
+    /* 
+    ---- FUNCTIONS -----
+     */
+    theme = true
+    function theme_func() {
+      // changes theme colors
+      if (theme) {
+        ChartList.forEach(function (chart) {
+          obj = document.getElementById(chart.config.id);
+          $(obj).css('background-color', 'lightgray');
+        });
+        $('body').css('background-color', 'gray');
+        $('.card').css('background-color', 'lightgray');
+        theme = false;
+      } else {
+        ChartList.forEach(function (chart) {
+          obj = document.getElementById(chart.config.id);
+          $(obj).css('background-color', 'white');
+        });
+        $('body').css('background-color', 'white');
+        $('.card').css('background-color', 'white');
+        theme = true;
+      }
+    }
+
+    function zeros(dimensions) {
+      var array = [];
+      for (var i = 0; i < dimensions[0]; ++i) {
+        array.push(dimensions.length == 1 ? 0 : zeros(dimensions.slice(1)));
+      }
+      return array;
+    }
+
+    function clear_func() {
+      // Remove all charts and data
+      //  console.log("clear");
+      ChartList = [];
+      var listview = document.getElementById('listview');
+      //  console.log(listview);
+      var children = listview.children;
+      for (let child of children) {
+        if (child.id != "buttons") {
+          child.remove()
+        }
+      }
+    }
+
+    function Create2DArray(rows, columns) {
+      var x = new Array(rows);
+      for (var i = 0; i < rows; i++) {
+        x[i] = new Array(columns).fill(0);
+      }
+      return x;
+    }
+
+    function paus_func() {
+      // Toggle paus variable
+      if (paus) {
+        paus = false;
+      } else {
+        paus = true;
+      }
+    }
+
+    function demo_func() {
+      // Toggle paus variable
+      //console.log("demo_change")
+      if (demo_scroll) {
+        demo_scroll = false;
+        $('html, body').stop();
+      } else {
+        demo_scroll = true;
+        start_scroll_animation()
+        //scrollTo(0, 1);
+        //scrollTo(0, 0);
+      }
+    }
+
+    function sleep(delay) {
+      var start = new Date().getTime();
+      while (new Date().getTime() < start + delay);
+    }
+
+    function start_scroll_animation(){
+    //scroll to bottom
+    setInterval(function(){
+      var slider = document.getElementById("myRange");
+
+    //time to scroll to bottom
+    $("html, body").animate({ scrollTop:  Math.round($(document).height() - $(window).height()) }, { duration: parseInt(slider.value) });
+
+    //scroll to top
+    setTimeout(function() {
+      $('html, body').animate({scrollTop:0},{ duration: parseInt(slider.value) });
+    },2000);//call every 2000 miliseconds
+
+    },2000);//call every 2000 miliseconds
+    }
+
+    function scroll_func() {   
+      if (demo_scroll) {
+        var slider = document.getElementById("myRange");
+        if (Math.round($(window).scrollTop() + $(window).height()) == $(document).height() - 1) {
+          $('html, body').animate({ scrollTop: 0 }, { duration: parseInt(slider.value) });
+        }
+        if (Math.round($(window).scrollTop()) == 0) {
+          $('html, body').animate({ scrollTop: Math.round($(document).height() - $(window).height()) }, { duration: parseInt(slider.value) });
+        }
+      }
+    }
+
+    function resized() {
+      if (demo_scroll) {
+        demo_func();
+        demo_func();
+      }
+    }
+
+    hide = false;
+    function hide_func() {
+      if (hide) {
+        hide = false;
+        // unhide
+      } else {
+        hide = true;
+        $("#buttons").fadeOut("slow", function () {
+          $("#listview").css("margin-top", 0);
+          // Animation complete.
+        });
+        // hide
+      }
+    }
+
+    // calculate distance between two points
+    function calculateDistance(elem, mouseY) {
+      return Math.floor(Math.sqrt(Math.pow(mouseY - (elem.offset().top + (elem.height() / 2)), 2)));
+    }
+
+    /*
+    ----- Document Events -----
+    */
+    $(document).mousemove(function (e) {
+      // handle on hover hide
+      var vertical = e.pageY;
+      if (hide) {
+        // console.log(vertical - document.documentElement.scrollTop)
+        if (vertical - document.documentElement.scrollTop <= 200 && !$('header').is(":visible")) {
+          $('#buttons').css("top", "0").fadeIn();
+          $("#listview").css("margin-top", $("#buttons").height());
+        } else {
+          $("#buttons").fadeOut("slow", function () {
+            // Animation complete.
+            $("#listview").css("margin-top", 0);
+          });
+        }
+      }
+    });
+
     // Leave margin size for Buttons- Header
     $(document).ready(function () {
       $(window).resize(function () {
@@ -27,8 +185,8 @@
     });
 
     function new_card(content) {
+      // generate new card
       var listview = document.getElementById("listview");
-
       var card = document.createElement("DIV");
       card.className = "card";
       var card_body = document.createElement("DIV");
@@ -42,6 +200,7 @@
     }
 
     function create_new_config(data) {
+      // create configs for all charts
       switch (data.type) {
         case 'line':
           return simple_config(data);
@@ -87,15 +246,13 @@
           backgroundColor: data.backgroundColor[i],
           borderColor: data.borderColor[i],
           data: [data.value[i]],
-          fill: false, // TODO
+          fill: false, 
         });
       }
       return datasets;
     }
 
-
     function no_axis_config(data) {
-
       var datasets = generate_dataset(data);
       //  console.log(datasets);
       return config = {
@@ -125,11 +282,7 @@
           },
         }
       };
-
-
     }
-
-
 
     function simple_config(data) {
       var datasets = generate_dataset(data);
@@ -174,49 +327,17 @@
               }
             }]
           }
-
         }
       };
-
     }
 
-
-    var paus = false;
-    var demo_scroll = false;
-    var ChartList = [];
-
-    $(document).ready(function () {
-
-      // scroll listener
-      window.addEventListener('scroll', function (e) {
-        scroll_func();
-      });
-
-      window.addEventListener('resize', function (event) {
-        resized();
-      });
-
-      document.addEventListener('keyup', (e) => {
-        //  console.log("test");
-        //  console.log(e.code);
-        if (e.code === "KeyD") {
-          demo_func();
-
-        }
-      });
-
-      //connect to the socket server.
-      var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
-      var numbers_received = [];
-
-      //receive socket from server
-      socket.on('server', function (data) {
-        //console.log(data);
+    function handle_request(data) {
         var config;
         var ctx;
-        if(data.type == "video_stream"){
+
+        if (data.type == "video_stream") {
           if (document.getElementById(data.id)) {
-          } else{
+          } else {
             var container = document.createElement("DIV");
             var title = document.createElement("H1");
             title.style.textAlign = "center";
@@ -228,18 +349,17 @@
             image.id = data.id;
             image.style.height = '100%';
             image.style.width = '100%';
-
-            image.src = "{{ url_for('video_feed', device=0)}}"; //TODO
+            image.src = "/video_feed/" + data.value;
             console.log(image.src)
             container.appendChild(image);
             new_card(container);
-          
           }
-          }
-        
+          return;
+        }
+
 
         //console.log(data)
-        const zeros = (m, n) => [...Array(m)].map(e => Array(n).fill(0));
+        //const zeros = (m, n) => [...Array(m)].map(e => Array(n).fill(0));
 
         if (data.type == "heatmap") {
           if (document.getElementById(data.id)) {
@@ -251,7 +371,6 @@
             arr[d[0]][d[1]] += 1;
             //Plotly.update(div, arr)
             Plotly.redraw(div, arr);
-
           }
           else {
             var heatmaparray = new Array(data.width).fill(0).map(() => new Array(data.height).fill(0));
@@ -276,6 +395,7 @@
             div_con.appendChild(div);
             new_card(div_con);
           }
+          return;
         }
 
         if (data.type == "image") {
@@ -299,6 +419,7 @@
             container.appendChild(image);
             new_card(container);
           }
+          return;
         }
 
         if (data.type == "text") {
@@ -325,8 +446,10 @@
             container.appendChild(text);
             new_card(container);
           }
+          return;
         }
 
+        // if here must be a chart or failed request
         // see if chart is already created
         if (document.getElementById(data.id)) {
 
@@ -406,153 +529,45 @@
 
           new_card(canvas);
         }
+      }
+
+
+
+
+    var paus = false;
+    var demo_scroll = false;
+    var ChartList = [];
+
+    $(document).ready(function () {
+
+      // Start stop demo with D press
+      document.addEventListener('keyup', (e) => {
+        if (e.code === "KeyD") {
+          demo_func();
+        }
       });
 
+      // scroll listener
+      /*
+      window.addEventListener('scroll', function (e) {
+        scroll_func();
+      });
+      */
 
-    });
+      window.addEventListener('resize', function (event) {
+        resized();
+      });
+    
 
-    theme = true
-    function theme_func() {
-      if (theme) {
-        ChartList.forEach(function (chart) {
-          obj = document.getElementById(chart.config.id);
-          $(obj).css('background-color', 'lightgray');
-        });
-        $('body').css('background-color', 'gray');
-        $('.card').css('background-color', 'lightgray');
-        theme = false;
-      } else {
-        ChartList.forEach(function (chart) {
-          obj = document.getElementById(chart.config.id);
-          $(obj).css('background-color', 'white');
-        });
-        $('body').css('background-color', 'white');
-        $('.card').css('background-color', 'white');
-        theme = true;
-      }
-    }
+      //connect to the socket server.
+      var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+      var numbers_received = [];
 
-
-    function zeros(dimensions) {
-      var array = [];
-
-      for (var i = 0; i < dimensions[0]; ++i) {
-        array.push(dimensions.length == 1 ? 0 : zeros(dimensions.slice(1)));
-      }
-
-      return array;
-    }
-
-
-    function clear_func() {
-      // Remove all charts and data
-      //  console.log("clear");
-      ChartList = [];
-
-      var listview = document.getElementById('listview');
-      //  console.log(listview);
-
-      var children = listview.children;
-
-      for (let child of children) {
-        if (child.id != "buttons") {
-          child.remove()
-        }
-      }
-
-    }
-
-    function Create2DArray(rows, columns) {
-      var x = new Array(rows);
-      for (var i = 0; i < rows; i++) {
-        x[i] = new Array(columns).fill(0);
-      }
-      return x;
-    }
-
-    function paus_func() {
-      // Toggle paus variable
-      if (paus) {
-        paus = false;
-      } else {
-        paus = true;
-      }
-    }
-
-    function demo_func() {
-      // Toggle paus variable
-      //console.log("demo_change")
-      if (demo_scroll) {
-        demo_scroll = false;
-        $('html, body').stop();
-
-      } else {
-        demo_scroll = true;
-        scrollTo(0, 1);
-        scrollTo(0, 0);
-      }
-    }
-
-    function sleep(delay) {
-      var start = new Date().getTime();
-      while (new Date().getTime() < start + delay);
-    }
-
-    function scroll_func() {   //TODO: fix scroll demo function!
-
-      if (demo_scroll) {
-        var slider = document.getElementById("myRange");
-
-        if (Math.round($(window).scrollTop() + $(window).height()) == $(document).height() - 1) {
-          $('html, body').animate({ scrollTop: 0 }, { duration: parseInt(slider.value) });
-        }
-
-        if (Math.round($(window).scrollTop()) == 0) {
-          $('html, body').animate({ scrollTop: Math.round($(document).height() - $(window).height()) }, { duration: parseInt(slider.value) });
-        }
-      }
-    }
-    function resized() {
-      if (demo_scroll) {
-        demo_func();
-        demo_func();
-      }
-    }
-    hide = false;
-
-    function hide_func() {
-      if (hide) {
-        hide = false;
-        // unhide
-      } else {
-        hide = true;
-        $("#buttons").fadeOut("slow", function () {
-          $("#listview").css("margin-top", 0);
-          // Animation complete.
-        });
-        // hide
-      }
-    }
-
-    function calculateDistance(elem, mouseY) {
-      return Math.floor(Math.sqrt(Math.pow(mouseY - (elem.offset().top + (elem.height() / 2)), 2)));
-    }
-
-    $(document).mousemove(function (e) {
-      var vertical = e.pageY;
-
-      if (hide) {
-        // console.log(vertical - document.documentElement.scrollTop)
-        if (vertical - document.documentElement.scrollTop <= 200 && !$('header').is(":visible")) {
-          $('#buttons').css("top", "0").fadeIn();
-          $("#listview").css("margin-top", $("#buttons").height());
-        } else {
-          $("#buttons").fadeOut("slow", function () {
-            // Animation complete.
-            $("#listview").css("margin-top", 0);
-          });
-        }
-      }
+      //receive socket from server
+      socket.on('server', function (data) {
+        //console.log(data);
+        handle_request(data)
+      });
     });
 
   </script>
@@ -561,7 +576,7 @@
 <body>
   <center>
     <div class="card" id="buttons"
-      style="position: fixed; top: 0;left: 50%; transform:translateX(-50%); width=100%; display: block ruby;">
+      style="position: fixed; top: 0;left: 50%; transform:translateX(-50%); width:100%; display: block ruby;">
       <div class="card-body">
         <center>
           <h1>Realtime Data Stream Charts</h1>
@@ -574,14 +589,14 @@
             onclick="theme_func();">
           <div style="display: inline-block;">
             <center>
-              <p>Stop by pressing space!</p>
+              <p>Start/Stop by pressing "D"!</p>
               <input type="submit" name="Demo_button" value="Demo Mode" onclick="demo_func();">
             </center>
           </div>
           <div style="display: inline-block;">
             <center>
               <p> Demo Slider Speed </p>
-              <input type="range" min="1" max="100000" value="60000" class="slider" id="myRange">
+              <input type="range" min="1000" max="60000" value="8000" class="slider" id="myRange">
             </center>
           </div>
 

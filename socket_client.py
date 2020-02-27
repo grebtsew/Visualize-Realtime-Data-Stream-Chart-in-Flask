@@ -16,7 +16,7 @@ class SocketClient(Thread):
 
     def run(self):
         from config_handler import ConfigHandler
-        (HOST, PORT) = ConfigHandler().get_all("SocketServer")
+        (HOST, PORT) = ConfigHandler().get_all("SocketServer") # pylint: disable=unbalanced-tuple-unpacking
 
         #HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
         #PORT = 65432 # can change this if you want

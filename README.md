@@ -1,7 +1,7 @@
 # Automatic Visualization of Realtime Data Stream Charts in Flask
  Visualize arbitrary realtime data streams with just a few lines of code!
 
-![demo2](images/demo2.gif)
+![demo2](images/demo1.gif)
 
 <details>
   <summary><strong>Table of Contents</strong> (click to expand)</summary>
@@ -38,11 +38,10 @@ The abiliy to visualize data in realtime can contribute with huge advantages whi
 </p>
 
 ## Solution
-This implementation is started by running the `start.py` file. The `Starter` will then set a timer for triggering the webbrowser after one second and then start the `Flask Handler`. The `Flask Handler` will start the website containing a `Flask-SocketIO` server. The `Flask-Server` will receive json objects and update the `GUI` listview. When the `Flask-Server` is started the `Scheduler` will be triggered. The `Scheduler` will start a `TCP Socket Server` which has the purpose of receiving messages and proxy them to the flask server. In the `demo` we also start some data streams with the scheduler. You basicly have two alternatives on sending data to this implementation. Either create a data stream in the `scheduler` or create a seperate `tcp socket client` and send data to the tcp socket server while running.
+This implementation is started by running the `start.py` file. The `Starter` will then set a timer for triggering the webbrowser after one second and then start the `Flask Handler`. The `Flask Handler` will start the website containing a `Flask-SocketIO` server. The `Flask-Server` will receive json objects and update the `GUI` listview. When the `Flask-Server` is started the `Scheduler` will be triggered. The `Scheduler` will start the middle-man servers consisting of a `TCP Socket Server`, a `TCP Socket Server for large files` and a `HTTP Server` which has the purpose of receiving messages and proxy them to the flask server. In the `demo` we also start some data streams with the scheduler. You basicly have two alternatives on sending data to this implementation. Either create a data stream in the `scheduler` or create a seperate `tcp socket client` or `http client` and send data to the tcp socket server while running. See examples.
 
 See program structure image below:
 ![structure](images/structure.png)
-
 
 # Getting Started
 1. Install program by firstly installing all the required packages in python3:
@@ -76,6 +75,19 @@ Take a closer look at the `scheduler.py` file, where more functions can be added
 
 The first one is a seperate tcp socket client started from the scheduler. Check out the scheduler and `socket_client.py`. The second one is a stream using the `DataStream` class. Check out `data_streams/samples.py`.
 
+## Showing RTSP Streams
+To create a video feed send a json with rtsp address as value and a unique id. Example:
+```
+video_data= {
+            'id': 12,
+            'value': rtsp://192.168.0.25:554/live.sdp,
+            'type': 'video_stream',
+            'name': 'Video Stream HTTP Example',
+            # Crypt password from config.ini
+            'api_crypt':CRYPT 
+        }
+```
+
 # Docker
 1. Build the docker image for this project by running:
 ```
@@ -83,26 +95,28 @@ docker build . --tag="JSChart-flask:1.0"
 ```
 2. Run the image in background by running:
 ```
-docker run -d -p 5000:5000 JSChart-flask:1.0
+docker run -d -p 80:80 JSChart-flask:1.0
 ```
 
 2. Or Run image in interactive mode by running:
 ```
-docker run -it -p 5000:5000 JSChart-flask:1.0
+docker run -it -p 80:80 JSChart-flask:1.0
 ```
 
 3. Open your webbrowser of choice and go to:
 ```
-http://127.0.0.1:5000/
+http://127.0.0.1/
+or
+http://localhost/
 ```
-
+NOTE: all ports and addresses can be changed in `config.ini`
 # Demo
 
 This is the output on the console during execution.
 ![demo1](images/demo1.PNG)
 
 This is how the implementation looks like during execution of the `demo()`.
-![demo2](images/demo2.gif)
+![demo3](images/demo1.gif)
 
 Examples of how each chart look and how the data should be represented in json see:
 * https://www.chartjs.org/samples/latest/
@@ -122,9 +136,13 @@ See ![license](LICENSE)
 
 # Known Issues
 List of known issues:
-* Ignore the `WebSocket transport not available. Install eventlet or gevent and gevent-websocket for improved performance.` warning as eventlet doesn't support Flask-socketio!
+* Ignore the `WebSocket transport not available. Install eventlet or gevent and gevent-websocket for improved performance.` warning as eventlet doesn't support Flask-socketio! Make sure eventlet is not installed in your python environemnt!
 
 # Sources
 The main inspiration and solutions comes from the following sources:
 * https://gitlab.com/patkennedy79/flask_chartjs_example
 * https://github.com/roniemartinez/real-time-charts-with-flask
+
+# Deprecated Demo
+A deprecated demo can be intresting to see how the application has developed from earlier versions!
+![demo2](images/demo2.gif)

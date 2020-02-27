@@ -1,5 +1,5 @@
 # Example random_nr data stream
-from data_stream import *
+from data_stream import Config
 from random import random
 from random import randrange
 
@@ -28,4 +28,4 @@ samplelist.append('{"id":30, "value": ['+str(round(random()*10, 3))+'], "type":"
 samplelist.append('{"id":50, "value": ['+str(round(random()*10, 3))+'], "type":"radar","active_points": 20, "width":300, "height":150, "label":["value"], "legend":["legend"], "name":"Radar chart", "fill": false, "backgroundColor":["#8e5ea2"], "borderColor":["#c45850"]}')
 samplelist.append('{"id":70, "value": ['+str(round(random()*10, 3))+'], "type":"doughnut","active_points": 20, "width":300, "height":150, "label":["value"], "legend":["legend"], "name":"Doughnut chart", "fill": false, "backgroundColor":["#3e95cd"], "borderColor":["#c45850"]}')
 samplelist.append('{"id":80, "value": ['+str(round(random()*10, 3))+'], "type":"horizontalBar","active_points": 20, "width":300, "height":150, "label":["value"], "legend":["legend"], "name":"Horizontal Bar chart", "fill": false, "backgroundColor":["#3cba9f"], "borderColor":["#c45850"]}')
-samplelist.append('{"id":60, "value": ['+str(int(round(random()*10, 3)))+'], "type":"polarArea","active_points": 20, "width":300, "height":150, "label":["value"], "legend":["legend"], "name":"Polar Area chart", "fill": false, "backgroundColor":["#3cba9f"], "borderColor":["#c45850"]}')
+#samplelist.append('{"id":60, "value": ['+str(int(round(random()*10, 3)))+'], "type":"polarArea","active_points": 20, "width":300, "height":150, "label":["value"], "legend":["legend"], "name":"Polar Area chart", "fill": false, "backgroundColor":["#3cba9f"], "borderColor":["#c45850"]}')

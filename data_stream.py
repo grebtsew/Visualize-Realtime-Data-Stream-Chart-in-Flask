@@ -15,7 +15,7 @@ class Config():
        borderColor = ["rgb(255, 99, 132)"], fill = "false"):
         self.type = _type
         self.active_points = _active_points
-        self.delay = _delay = 1;
+        self.delay = _delay = 1
         self.id = _id
         self.name = _name
         self.label = _label

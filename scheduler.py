@@ -28,8 +28,7 @@ def scheduler():
 
     # Start HTTP server
     HTTPserver().start()
-    # TODO: add try & catch where is needed! For demo safety!
- 
+  
     # Can be a smart idea to start streams here!
     # Start some demo flows
     demo()

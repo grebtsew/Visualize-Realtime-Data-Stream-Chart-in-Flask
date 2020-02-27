@@ -1,11 +1,8 @@
 import time
 import json
-
 from threading import Thread, Event
-from data_stream import *
-
-from flask_handler import *
 import socket
+from data_stream import send_request
 
 """
 SocketServer is a multithreaded socket server
@@ -39,7 +36,7 @@ class SocketServer(Thread):
 
     def run(self):
         from config_handler import ConfigHandler
-        (HOST, PORT) = ConfigHandler().get_all("SocketServer")
+        (HOST, PORT) = ConfigHandler().get_all("SocketServer") # pylint: disable=unbalanced-tuple-unpacking
 
         #HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
         #PORT = 65432        # Port to listen on (non-privileged ports are > 1023)

@@ -2,9 +2,8 @@
 This server will receive HTTP post requests and send the data to flask
 """
 from threading import Thread
-from data_stream import *
+from data_stream import send_request
 import http.server
-from flask_handler import *
 import json
 from functools import partial
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -49,7 +48,7 @@ class S(BaseHTTPRequestHandler):
                         _label=safe(data, "label"), _legend=safe(data, "legend"), _width = safe(data, "width"), _height = safe(data, "height"),
                         _name = safe(data, "name"), fill = safe(data, "fill"), backgroundColor = safe(data, "backgroundColor"),
                         borderColor = safe(data, "borderColor"))
-            except Exception as e:
+            except Exception:
                 pass
         self._set_response()
 
@@ -60,7 +59,7 @@ class HTTPserver(Thread):
 
     def run(self):
         from config_handler import ConfigHandler
-        (HOST, PORT, CRYPT) = ConfigHandler().get_all("HTTPServer")
+        (HOST, PORT, CRYPT) = ConfigHandler().get_all("HTTPServer") # pylint: disable=unbalanced-tuple-unpacking
         server_address = (str(HOST),int(PORT))
         httpd = HTTPServer(server_address, partial(S, CRYPT))
         try:
