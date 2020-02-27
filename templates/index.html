@@ -349,7 +349,7 @@
             image.id = data.id;
             image.style.height = '100%';
             image.style.width = '100%';
-            image.src = "/video_feed/" + data.value;
+            image.src = "/video_feed/" + data.value.split("/").join("skipableslash");
             console.log(image.src)
             container.appendChild(image);
             new_card(container);
@@ -553,11 +553,11 @@
         scroll_func();
       });
       */
-
+      /*
       window.addEventListener('resize', function (event) {
         resized();
       });
-    
+      */
 
       //connect to the socket server.
       var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');

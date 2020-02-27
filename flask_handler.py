@@ -64,7 +64,9 @@ def gen(device):
 def video_feed(device):
     # return the response generated along with the specific media
     # type (mime type)
-    #print(device)
+    print(device)
+    device = device.replace("skipableslash","/")
+    print(device)
     try:
         return Response(gen(int(device)),mimetype = "multipart/x-mixed-replace; boundary=frame")
     except Exception:

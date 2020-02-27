@@ -24,6 +24,25 @@ else:
 print("Stream active at :" +'udp://'+address+":"+str(port))
 
 print("Sending stream address to Visulization Stream...")
+video_data= {
+    'id': 144124,
+    'value': 'udp://'+address+":"+str(port),
+    'type': 'video_stream',
+    'name': 'Video Stream HTTP Example',
+    'api_crypt':"password-1"}
+
+headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+API_ENDPOINT = "http://localhost:8030" # set in config
+
+import requests
+import json
+import time
+while True:
+# sending post request and saving response as response object
+    requests.post(url=API_ENDPOINT, data=json.dumps(video_data), headers=headers)
+    time.sleep(2)
+            
+
 
 """
 #Uncomment this if you want to test the rtsp server streams in this program!
@@ -38,7 +57,6 @@ while True:
     cv2.waitKey(1)
 """
 
-from time import sleep
 while True:
-    sleep(10) # keep thread alive
+    time.sleep(10) # keep thread alive
 
