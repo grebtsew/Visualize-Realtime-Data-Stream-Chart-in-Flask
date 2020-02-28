@@ -19,12 +19,12 @@ class HTTPClient(Thread):
 
         data = {
             'id': 12,
-            'value': 0,
+            'value': [10],
             'type': 'line',
             'active_points': 20,
             'label': ['Random HTTP Number'],
             'legend': ['random'],
-            'name': 'Video Stream HTTP Example',
+            'name': 'HTTP Example',
             'borderColor': ['#3e95cd'],
             'backgroundColor': ['#3e95cd'],
             'api_crypt':CRYPT
