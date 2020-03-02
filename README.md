@@ -61,6 +61,21 @@ python3 start.py
 
 5. Create your stream by looking at the [heading below](#How-to-Send-data-to-your-Server).
 
+Example data json:
+```
+data = {
+  "id":1337, 
+  "value": [1,1], 
+  "type":"line",
+  "active_points": 20,
+  "label":"Label",
+  "legend": ["one", "two"],
+  "name":"Example",
+  "borderColor":["#3e95cd", "#e8c3b9"],
+  "backgroundColor":["#3e95cd","#e8c3b9"]
+  }      
+```
+
 # Change Config
 Ports and addresses can be changed in the `config.ini` file.
 
