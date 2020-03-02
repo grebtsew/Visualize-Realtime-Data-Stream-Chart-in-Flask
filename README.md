@@ -72,7 +72,8 @@ data = {
   "legend": ["one", "two"],
   "name":"Example",
   "borderColor":["#3e95cd", "#e8c3b9"],
-  "backgroundColor":["#3e95cd","#e8c3b9"]
+  "backgroundColor":["#3e95cd","#e8c3b9"],
+  "api_crypt":"password-1"
   }      
 ```
 

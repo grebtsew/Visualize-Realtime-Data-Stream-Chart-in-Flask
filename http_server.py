@@ -40,11 +40,12 @@ class S(BaseHTTPRequestHandler):
             post_data = self.rfile.read(content_length) # <--- Gets the data itself
             # decode incoming data // see if password is correct here!
             try:
+                #print("data",post_data)
                 data = json.loads(post_data)
-
+                #print("json", data)
                 if data['api_crypt'] :
                     if data['api_crypt'] == self.CRYPT:
-                        print("Sending request " + str(data["value"]))
+                        #print("Sending request " + str(data["value"]))
                         send_request(id = data["id"], data=data["value"], type =safe(data, "type"), active_points =safe(data, "active_points"),
                         _label=safe(data, "label"), _legend=safe(data, "legend"), _width = safe(data, "width"), _height = safe(data, "height"),
                         _name = safe(data, "name"), fill = safe(data, "fill"), backgroundColor = safe(data, "backgroundColor"),
