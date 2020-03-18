@@ -125,7 +125,7 @@ http://127.0.0.1/
 or
 http://localhost/
 ```
-NOTE: all ports and addresses can be changed in `config.ini`
+**Note**: all ports and addresses can be changed in `config.ini`
 # Demo
 
 This is the output on the console during execution.
@@ -152,7 +152,7 @@ See ![license](LICENSE)
 
 # Known Issues
 List of known issues:
-* Ignore the `WebSocket transport not available. Install eventlet or gevent and gevent-websocket for improved performance.` warning as eventlet doesn't support Flask-socketio! Make sure eventlet is not installed in your python environemnt!
+* Ignore the `WebSocket transport not available. Install eventlet or gevent and gevent-websocket for improved performance.` warning as eventlet doesn't support Flask-socketio! Make sure eventlet is not installed in your python environment!
 
 # Sources
 The main inspiration and solutions comes from the following sources:
