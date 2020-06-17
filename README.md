@@ -162,3 +162,12 @@ The main inspiration and solutions comes from the following sources:
 # Deprecated Demo
 A deprecated demo can be intresting to see how the application has developed from earlier versions!
 ![demo2](images/demo2.gif)
+
+
+# TODO
+These are functions that I will add
+* geo tagging free api map
+* 3d graphs
+* 3d algoritm
+* Bubble matrix
+* Tree

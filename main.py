@@ -15,3 +15,4 @@ url = "http://"+HOST+":{0}".format(PORT)
 if __name__ == '__main__':
     threading.Timer(1, functools.partial( webbrowser.open, url )).start()
     start_flask_application()
+

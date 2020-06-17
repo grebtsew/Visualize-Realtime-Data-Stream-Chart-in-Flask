@@ -10,8 +10,12 @@
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+ 
+ 
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
 
-  <script>
+
+<script>
     /* 
     ---- FUNCTIONS -----
      */
@@ -350,12 +354,74 @@
             image.style.height = '100%';
             image.style.width = '100%';
             image.src = "/video_feed/" + data.value.split("/").join("skipableslash");
-            console.log(image.src)
+            //console.log(image.src)
             container.appendChild(image);
             new_card(container);
           }
           return;
         }
+
+        if (data.type == "map") {
+          if (document.getElementById("mapdiv")) {
+           
+          } else {
+            //data.markers - [{lat: x, lng: y}] 
+            //data.zoom - how much to zoom
+            // data.center - how much to 
+            // 
+
+            var container = document.createElement("DIV");
+            var title = document.createElement("H1");
+            title.style.textAlign = "center";
+            var node = document.createTextNode(data.name); 
+            title.appendChild(node);
+            container.appendChild(title);
+
+            var mapdiv = document.createElement("DIV");
+            mapdiv.id = "mapdiv";
+            mapdiv.className = "mapdiv";
+            
+            mapdiv.style.height = '100%';
+            mapdiv.style.width = '100%';
+            
+            mapboxgl.accessToken = '<your access token here>';
+
+        var map = new mapboxgl.Map({
+        container: mapdiv, // container id
+        style:{
+        'version': 8,
+        'sources': {
+          'raster-tiles': {
+            'type': 'raster',
+            'tiles': [
+              'https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg'
+            ],
+            'tileSize': 256,
+          }
+        },
+        'layers': [{
+          'id': 'simple-tiles',
+          'type': 'raster',
+          'source': 'raster-tiles',
+          'minzoom': 0,
+          'maxzoom': 22
+                    }]
+                  },
+            center: [-74.5, 40], // starting position
+            zoom: 2 // starting zoom
+            });
+
+           // mapdiv.appendChild(map);
+            container.appendChild(mapdiv);
+            new_card(container);
+
+            
+
+          }
+          return;
+        }
+
+
 
 
         //console.log(data)
@@ -607,7 +673,7 @@
 
   <div class="container">
     <div class="row">
-
+      
       <div class="col-12" id="listview" style="z-index: -1;">
 
       </div>
@@ -625,5 +691,7 @@
 
   </script>
 </body>
+
+
 
 </html>

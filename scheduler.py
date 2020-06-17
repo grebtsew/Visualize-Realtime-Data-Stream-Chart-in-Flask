@@ -24,14 +24,15 @@ def scheduler():
 
     # Start TCP socket Server
     SocketServer().start()
+    print("SocketServer Started")
     ImageServer().start()
-
+    print("ImageServer Started")
     # Start HTTP server
     HTTPserver().start()
-  
+    print("HTTPServer Started")
     # Can be a smart idea to start streams here!
     # Start some demo flows
-    demo()
+    #demo()
 
 def demo():
 
