@@ -52,7 +52,7 @@ pip install -r requirements.txt
 
 2. Start the implementation by running:
 ```
-python3 start.py
+python3 main.py
 ```
 
 3. If the website doesn't open automatically, open a webbrowser of your choice and go to: `https://127.0.0.1:5000/`
